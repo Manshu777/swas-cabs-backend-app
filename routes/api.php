@@ -8,11 +8,18 @@ use App\Http\Controllers\RideController;
 use App\Http\Controllers\DriverVerificationController;
 use App\Http\Controllers\VehicleDetailsController;
 
-
+use App\Http\Controllers\PlacesController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+
+
+
+Route::get('/places/search', [PlacesController::class, 'searchPlaces']);
+Route::get('/places/{placeId}', [PlacesController::class, 'getPlaceDetails']);
+
+
 
 // API routes for user and driver authentication
 
