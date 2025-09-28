@@ -14,6 +14,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+Route::get('/calculate-distance', [PlacesController::class, 'calculateDistance']);
 
 
 Route::get('/places/search', [PlacesController::class, 'searchPlaces']);

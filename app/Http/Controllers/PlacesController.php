@@ -71,13 +71,39 @@ class PlacesController extends Controller
         }
     }
 
-    /**
-     * Get place details by place ID
-     *
-     * @param Request $request
-     * @param string $placeId
-     * @return JsonResponse
-     */
+   
+     public function calculateDistance(Request $request)
+    {
+        $origin = $request->query('origin');       // "28.6139,77.2090"
+        $destination = $request->query('destination'); // "28.4595,77.0266"
+
+        if (!$origin || !$destination) {
+            return response()->json(['error' => 'Origin and Destination required'], 400);
+        }
+
+        $apiKey = config('services.google_maps.api_key');
+        // config('services.google_maps.api_key')
+
+        $response = Http::get("https://maps.googleapis.com/maps/api/directions/json", [
+            'origin' => $origin,
+            'destination' => $destination,
+            'key' => $apiKey,
+        ]);
+
+        $data = $response->json();
+
+        if (!empty($data['routes'])) {
+            $distance = $data['routes'][0]['legs'][0]['distance']['text'];
+            $duration = $data['routes'][0]['legs'][0]['duration']['text'];
+
+            return response()->json([
+                'distance' => $distance,
+                'duration' => $duration,
+            ]);
+        }
+
+        return response()->json(['error' => 'Route not found'], 404);
+    }
      public function getPlaceDetails(Request $request, string $placeId): JsonResponse
     {
         if (empty($placeId)) {
