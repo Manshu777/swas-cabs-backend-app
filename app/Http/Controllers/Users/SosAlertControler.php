@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Users;
 
 use Illuminate\Http\Request;
 use App\Models\SosAlert;
-
+use App\Http\Controllers\Controller;
 class SosAlertControler extends Controller
 {
     public function triggerSOS(Request $request)

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Drivers;
 
 use App\Models\VehicleDetails;
 use Illuminate\Http\Request;
-
+use App\Http\Controllers\Controller;
 class VehicleDetailsController extends Controller
 {
     public function index()

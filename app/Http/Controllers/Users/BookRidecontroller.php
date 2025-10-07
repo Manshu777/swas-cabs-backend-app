@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Users;
 
 use App\Models\BookRide as Ride;
 use Illuminate\Http\Request;
 use App\Events\RideCreated;
 use App\Events\FareEstimated;
+use App\Http\Controllers\Controller;
 
 class BookRideController extends Controller
 {

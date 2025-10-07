@@ -1,18 +1,23 @@
 <?php
 
+use App\Http\Controllers\Drivers\RideController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SosAlertControler as SOSController;
+use App\Http\Controllers\Users\SosAlertControler as SOSController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\RideController;
 use App\Http\Controllers\DriverVerificationController;
-use App\Http\Controllers\VehicleDetailsController;
+use App\Http\Controllers\Drivers\VehicleDetailsController;
 
-use App\Http\Controllers\PlacesController;
+use App\Http\Controllers\Users\PlacesController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+
+
+
+
+
 
 Route::get('/calculate-distance', [PlacesController::class, 'calculateDistance']);
 
