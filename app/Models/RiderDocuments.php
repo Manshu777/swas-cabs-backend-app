@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RiderDocuments extends Model
+class RiderDocument extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'driver_id',
         'license_number',
@@ -19,11 +22,11 @@ class RiderDocuments extends Model
         'insurance_image',
         'police_verification_image',
         'status',
-        'rejection_reason'
+        'rejection_reason',
     ];
 
     public function driver()
     {
-        return $this->belongsTo(Rides::class);
+        return $this->belongsTo(User::class, 'driver_id');
     }
 }

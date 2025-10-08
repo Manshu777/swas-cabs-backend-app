@@ -2,47 +2,90 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',
+        'phone',
         'password',
+        'gender',
+        'profile_image',
+        'emergency_contacts',
+        'language',
+        'is_active',
+        'role', // 'passenger' or 'driver'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'is_active' => 'boolean',
+    ];
+
+    // Rides requested by the user (as a passenger)
+    public function ridesAsPassenger()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->hasMany(Ride::class, 'user_id');
+    }
+
+    // Rides driven by the user (as a driver)
+    public function ridesAsDriver()
+    {
+        return $this->hasMany(Ride::class, 'driver_id');
+    }
+
+    // Documents (for drivers only)
+    public function documents()
+    {
+        return $this->hasMany(RiderDocument::class, 'driver_id');
+    }
+
+    // Vehicles (for drivers only)
+    public function vehicles()
+    {
+        return $this->hasMany(VehicleDetail::class, 'driver_id');
+    }
+
+    // Ratings given by the user (as a passenger)
+    public function ratingsGiven()
+    {
+        return $this->hasMany(Rating::class, 'user_id');
+    }
+
+    // Ratings received by the user (as a driver)
+    public function ratingsReceived()
+    {
+        return $this->hasMany(Rating::class, 'driver_id');
+    }
+
+    // SOS alerts created by the user
+    public function sosAlerts()
+    {
+        return $this->hasMany(SosAlert::class, 'user_id');
+    }
+
+    // Check if the user is a driver
+    public function isDriver()
+    {
+        return $this->role === 'driver';
+    }
+
+    // Check if the user is a passenger
+    public function isPassenger()
+    {
+        return $this->role === 'passenger';
     }
 }

@@ -2,30 +2,36 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class SosAlert extends Model
 {
+    use HasFactory;
+
     protected $table = 'sos_alerts';
 
     protected $fillable = [
         'ride_id',
         'user_id',
         'location',
+        'latitude',
+        'longitude',
         'status',
     ];
 
-    /**
-     * Relationships
-     */
+    protected $casts = [
+        'latitude' => 'decimal:8',
+        'longitude' => 'decimal:8',
+    ];
 
     public function ride()
     {
-        return $this->belongsTo(BookRide::class);
+        return $this->belongsTo(Ride::class, 'ride_id');
     }
 
     public function user()
     {
-        return $this->belongsTo(RegUsers::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

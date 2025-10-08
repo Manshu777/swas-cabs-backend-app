@@ -29,49 +29,82 @@ Route::get('/places/{placeId}', [PlacesController::class, 'getPlaceDetails']);
 
 // API routes for user and driver authentication
 
-Route::prefix('v1')->group(function () {
-
-    Route::middleware('auth:sanctum')->get('/profile', [AuthController::class, 'profile']);
-
-    Route::post('/user/register', [AuthController::class, 'userRegister']);
-    Route::post('/driver/register', [AuthController::class, 'driverRegister']);
-
-    Route::post('/user/login', [AuthController::class, 'userLogin']);
-    Route::post('/driver/login', [AuthController::class, 'driverLogin']);
-
-    Route::post('/verify/{id}/driver', [AuthController::class, 'updateDriverStatus']);
-    Route::get('/getall/users', [AuthController::class, 'getAllUsers']);
-    Route::get('/getall/driver', [AuthController::class, 'getAllDrivers']);
 
 
-    Route::middleware('auth:sanctum')->post('/emergency-contacts', [AuthController::class, 'updateContacts']);
-    Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
-    Route::middleware('auth:sanctum')->get('/user/profile', [AuthController::class, 'profile']);
+// Route::middleware('auth:sanctum')->group(function () {
+//     // Common routes
+//     Route::get('/profile', [UserController::class, 'profile']);
+//     Route::put('/profile', [UserController::class, 'update']);
 
-    // ride booking and management routes
+//     // Passenger routes
+//     Route::middleware('role:passenger')->group(function () {
+//         Route::post('/rides', [RideController::class, 'store']);
+//         Route::get('/rides', [RideController::class, 'passengerRides']);
+//         Route::post('/rides/{ride}/rate', [RatingController::class, 'store']);
+//         Route::post('/rides/{ride}/cancel', [RideController::class, 'cancel']);
+//         Route::post('/sos', [SosAlertController::class, 'store']);
+//         Route::post('/rides/{ride}/pay', [TransactionController::class, 'pay']);
+//     });
 
-    Route::apiResource('vehicle-details', VehicleDetailsController::class);
-    // Protected routes for authenticated users and drivers
-    Route::middleware('auth:sanctum')->group(function () {
+//     // Driver routes
+//     Route::middleware('role:driver')->group(function () {
+//         Route::get('/rides/available', [RideController::class, 'available']);
+//         Route::post('/rides/{ride}/accept', [RideController::class, 'accept']);
+//         Route::post('/rides/{ride}/update-status', [RideController::class, 'updateStatus']);
+//         Route::get('/driver/rides', [RideController::class, 'driverRides']);
+//         Route::get('/driver/ratings', [RatingController::class, 'driverRatings']);
+//         Route::post('/documents', [DocumentController::class, 'store']);
+//         Route::get('/documents', [DocumentController::class, 'index']);
+//         Route::post('/vehicles', [VehicleController::class, 'store']);
+//         Route::get('/vehicles', [VehicleController::class, 'index']);
+//         Route::put('/vehicles/{vehicle}', [VehicleController::class, 'update']);
+//         Route::delete('/vehicles/{vehicle}', [VehicleController::class, 'destroy']);
+//     });
+// });
 
-        // Ride management routes
-        Route::post('/ride/estimate', [RideController::class, 'estimateFare']);
-        Route::post('/ride/book', [RideController::class, 'createRide']);
-        Route::patch('/ride/{rideId}/assign-driver', [RideController::class, 'assignDriver']);
-        Route::post('/sos', [SOSController::class, 'triggerSOS']);
+// Route::prefix('v1')->group(function () {
 
-        // User routes
-        Route::post('/ride/search', [RideController::class, 'searchRide']);
-        Route::post('/ride/book', [RideController::class, 'bookRide']);
-        Route::post('/ride/track', [RideController::class, 'trackRide']);
+//     Route::middleware('auth:sanctum')->get('/profile', [AuthController::class, 'profile']);
 
-        // Driver routes
-        Route::post('/ride/accept', [RideController::class, 'acceptRide']);
-        Route::post('/driver/location', [RideController::class, 'updateLocation']);
+//     Route::post('/user/register', [AuthController::class, 'userRegister']);
+//     Route::post('/driver/register', [AuthController::class, 'driverRegister']);
 
-        // Admin routes (assuming admin middleware)
-        Route::post('/driver/verify', [DriverVerificationController::class, 'verifyDriver']);
-    });
+//     Route::post('/user/login', [AuthController::class, 'userLogin']);
+//     Route::post('/driver/login', [AuthController::class, 'driverLogin']);
+
+//     Route::post('/verify/{id}/driver', [AuthController::class, 'updateDriverStatus']);
+//     Route::get('/getall/users', [AuthController::class, 'getAllUsers']);
+//     Route::get('/getall/driver', [AuthController::class, 'getAllDrivers']);
 
 
-});
+//     Route::middleware('auth:sanctum')->post('/emergency-contacts', [AuthController::class, 'updateContacts']);
+//     Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+//     Route::middleware('auth:sanctum')->get('/user/profile', [AuthController::class, 'profile']);
+
+//     // ride booking and management routes
+
+//     Route::apiResource('vehicle-details', VehicleDetailsController::class);
+//     // Protected routes for authenticated users and drivers
+//     Route::middleware('auth:sanctum')->group(function () {
+
+//         // Ride management routes
+//         Route::post('/ride/estimate', [RideController::class, 'estimateFare']);
+//         Route::post('/ride/book', [RideController::class, 'createRide']);
+//         Route::patch('/ride/{rideId}/assign-driver', [RideController::class, 'assignDriver']);
+//         Route::post('/sos', [SOSController::class, 'triggerSOS']);
+
+//         // User routes
+//         Route::post('/ride/search', [RideController::class, 'searchRide']);
+//         Route::post('/ride/book', [RideController::class, 'bookRide']);
+//         Route::post('/ride/track', [RideController::class, 'trackRide']);
+
+//         // Driver routes
+//         Route::post('/ride/accept', [RideController::class, 'acceptRide']);
+//         Route::post('/driver/location', [RideController::class, 'updateLocation']);
+
+//         // Admin routes (assuming admin middleware)
+//         Route::post('/driver/verify', [DriverVerificationController::class, 'verifyDriver']);
+//     });
+
+
+// });
