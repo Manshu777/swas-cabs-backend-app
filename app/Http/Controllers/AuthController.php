@@ -23,14 +23,14 @@ class AuthController extends Controller
             'phone' => 'required|string|unique:reg_users',
             'gender' => 'required|string',
             'password' => 'required|string|min:8|confirmed',
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            // 'profile_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'emergency_contacts' => 'nullable|json'
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-
+ 
         $profileImagePath = null;
         if ($request->hasFile('profile_image')) {
             $profileImagePath = $request->file('profile_image')->store('profile_images', 'public');

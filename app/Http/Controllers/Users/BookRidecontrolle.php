@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Users;
 
+use App\Events\FareEstimated;
+use App\Events\RideCreated;
+use App\Http\Controllers\Controller;
 use App\Models\BookRide as Ride;
 use Illuminate\Http\Request;
-use App\Events\RideCreated;
-use App\Events\FareEstimated;
-use App\Http\Controllers\Controller;
 
-class BookRideController extends Controller
+class BookRidecontrolle extends Controller
 {
-    public function estimateFare(Request $request)
+     public function estimateFare(Request $request)
     {
         $request->validate([
             'pickup_latitude' => 'required|numeric',

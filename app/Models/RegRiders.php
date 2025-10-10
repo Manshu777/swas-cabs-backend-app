@@ -15,6 +15,7 @@ class RegRiders extends Authenticatable
         'email',
         'phone',
         'password',
+        "gender",
         "profile_image",
         'is_verified',
         'is_available',

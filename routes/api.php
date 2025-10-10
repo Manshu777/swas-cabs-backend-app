@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Drivers\RideController;
+use App\Http\Controllers\Users\BookRidecontrolle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Users\SosAlertControler as SOSController;
@@ -24,6 +25,45 @@ Route::get('/calculate-distance', [PlacesController::class, 'calculateDistance']
 
 Route::get('/places/search', [PlacesController::class, 'searchPlaces']);
 Route::get('/places/{placeId}', [PlacesController::class, 'getPlaceDetails']);
+
+
+
+
+
+
+
+
+Route::prefix("/v1/driver")->group(function(){
+
+Route::post("/register",[AuthController::class,"driverRegister"]);
+Route::post("/login ",[AuthController::class,"driverLogin"]);
+
+
+
+});
+
+
+
+
+
+
+
+
+Route::prefix("/v1/user")->group(function(){
+Route::post("/register", [AuthController::class,"userRegister"]);
+Route::post("/login", [AuthController::class,"userLogin"]);
+Route::put("/update-contect",[AuthController::class,"userLogin"]);
+
+Route::post("/create-ride",[BookRidecontrolle::class,"createRide"]);
+
+});
+
+
+//
+
+
+
+
 
 
 
