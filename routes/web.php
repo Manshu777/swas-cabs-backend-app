@@ -24,8 +24,10 @@ Route::prefix('admin')->group(function () {
     Route::post('/login', [LoginController::class, 'login']);
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 Route::get('/bookings', [DashboardController::class, 'bookings'])->name('admin.booking');
+Route::get('/users', [DashboardController::class, 'users'])->name('admin.users');
 
 
+Route::get('/driver', [DashboardController::class, 'driver'])->name('admin.driver');
     // Authenticated routes
     // Route::middleware(['auth', 'admin'])->group(function () {
     //     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
