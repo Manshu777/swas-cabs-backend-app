@@ -26,11 +26,6 @@ Use for real-time driver tracking.
 
 
 ////----- Vivek Bhai!!! -------////////
-1 Bro Phala Kaam h tara ki Mana FolderStucrue or user ka table New Kia ha To apna db delete karr dio frr migrate karrio , 
-2 mana koch models bhi m bhi changs kia h phala check karr ka lana migrate sa phala 
-3 Api ka Kaam Api ka controller m hi hoga or route bhi vhai bana ga 
-4 moja Curl Comand ko yha md file ma dalo bna ka or sara api test bhi karo userregiester or driver abhi ka lia otp verification nhai chahiya ha 
-5 sirf abhi ka lia main goal ha user or driver regiester bass 
 
 
 

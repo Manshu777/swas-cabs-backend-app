@@ -12,12 +12,12 @@
         {{-- Sidebar --}}
         @include('layouts.partials.sidebar')
         
-        {{-- Main Content --}}
+
         <div class="flex flex-1 flex-col overflow-x-hidden {{ session('sidebar_collapsed', false) ? 'lg:ml-16' : 'lg:ml-72' }} transition-all duration-300 ease-in-out">
-            {{-- Header --}}
+         
             @include('layouts.partials.header')
             
-            {{-- Main --}}
+     
             <main class="flex-1 p-6 overflow-y-auto">
                 @yield('content')
             </main>
