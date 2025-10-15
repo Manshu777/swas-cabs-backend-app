@@ -10,6 +10,7 @@ class RiderDocuments extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'driver_id',
         'license_number',
         'license_image',
@@ -25,8 +26,14 @@ class RiderDocuments extends Model
         'rejection_reason',
     ];
 
-    public function driver()
+    // public function driver()
+    // {
+       
+    //     return $this->belongsTo(User::class, 'driver_id');
+    // }
+     public function user()
     {
-        return $this->belongsTo(User::class, 'driver_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
+    
 }

@@ -31,6 +31,7 @@ Route::get('/places/{placeId}', [PlacesController::class, 'getPlaceDetails']);
 
 
 
+Route::middleware('auth:sanctum')->post('/become-driver', [AuthController::class, 'becomeDriver']);
 
 
 Route::prefix("/v1/driver")->group(function(){
@@ -50,7 +51,10 @@ Route::post("/login ",[AuthController::class,"driverLogin"]);
 
 
 Route::prefix("/v1/user")->group(function(){
-Route::post("/register", [AuthController::class,"userRegister"]);
+Route::post("/genrate-otp", [AuthController::class,"generateAadhaarOtp"]);
+Route::post("/verify-otp", [AuthController::class,"verifyAdharOtp"]);
+
+
 Route::post("/login", [AuthController::class,"userLogin"]);
 Route::put("/update-contect",[AuthController::class,"userLogin"]);
 

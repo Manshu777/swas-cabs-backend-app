@@ -22,6 +22,13 @@ class User extends Authenticatable
         'language',
         'is_active',
         'role', // 'passenger' or 'driver'
+          'adhar_number',
+          'is_verified',
+          'is_available',
+          'latitude',
+          'longitude',
+        'kyc_status',
+        'kyc_verified_at',
     ];
 
     protected $hidden = [
@@ -44,19 +51,19 @@ class User extends Authenticatable
     // Rides driven by the user (as a driver)
     public function ridesAsDriver()
     {
-        return $this->hasMany(Ride::class, 'driver_id');
+        return $this->hasMany(Ride::class, 'user_id');
     }
 
     // Documents (for drivers only)
     public function documents()
     {
-        return $this->hasMany(RiderDocument::class, 'driver_id');
+        return $this->hasMany(RiderDocument::class, 'user_id');
     }
 
     // Vehicles (for drivers only)
     public function vehicles()
     {
-        return $this->hasMany(VehicleDetail::class, 'driver_id');
+        return $this->hasMany(VehicleDetail::class, 'user_id');
     }
 
     // Ratings given by the user (as a passenger)
@@ -68,7 +75,7 @@ class User extends Authenticatable
     // Ratings received by the user (as a driver)
     public function ratingsReceived()
     {
-        return $this->hasMany(Rating::class, 'driver_id');
+        return $this->hasMany(Rating::class, 'user_id');
     }
 
     // SOS alerts created by the user

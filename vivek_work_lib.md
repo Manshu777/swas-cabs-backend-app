@@ -28,9 +28,55 @@ Use for real-time driver tracking.
 ////----- Vivek Bhai!!! -------////////
 
 
+heelo bro!!!
+
+
+sabsa phala migrat bro 
+Bro Ham Bar bar Kyu Regiester kara vaya or driver or user dono ka reg alag alag nhai ha 
+dno ka ik hi h phla nomal user na acc create kia frr os user ko agar diver bna h 
+vo apni file update kara ga isa kya hoga otp verification ik hi barr hoga 2nd tine sirf doics verify hoya ga 
+ to bro extra code and exta route delete karr da frr  mana curl bnaa h test karr bass simpe 
+well stuctred karrr dio yarr ples user s verify ka time jada info nhai laa rha ho ma kyukki bro need nhai h bki ki
+jab vo otp verify kara ga tab details fetech karka bhai store karr rha hio ma
+
+
+curl -X POST http://localhost:8000/api/v1/user/genrate-otp \
+-H "Accept: application/json" \
+-H "Content-Type: application/json" \
+-d '{
+  "aadhaar_number": "123412341234"
+}'
 
 
 
+curl -X POST http://127.0.0.1:8000/api/v1/user/verify-otp \
+-H "Accept: application/json" \
+-H "Content-Type: application/json" \
+-d '{
+  "reference_id": "TXN123456789",
+  "otp": "123456",
+  "email": "user@gmail.com",
+  "password": "User@123"
+}'
+
+
+
+
+curl -X POST "http://your-domain.com/api/become-driver" \
+-H "Authorization: Bearer YOUR_USER_TOKEN" \
+-F "license_number=DL1234567890" \
+-F "license_image=@/path/to/license.jpg" \
+-F "vehicle_rc_number=RC123456" \
+-F "vehicle_rc_image=@/path/to/rc.jpg" \
+-F "insurance_number=INS123456" \
+-F "insurance_image=@/path/to/insurance.jpg" \
+-F "police_verification_image=@/path/to/police.jpg" \
+-F "brand=Toyota" \
+-F "model=Corolla" \
+-F "vehicle_type=Car" \
+-F "license_plate=MH12AB1234" \
+-F "year=2020" \
+-F "color=White"
 
 
 
