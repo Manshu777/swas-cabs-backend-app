@@ -39,4 +39,10 @@ class RegRiders extends Authenticatable
     {
         return $this->hasOne(RiderDocuments::class, 'driver_id');
     }
+
+public function driverwallet(){
+    return $this->hasOne(Driverwallet::class,"driver_id");
+}
+
+
 }
