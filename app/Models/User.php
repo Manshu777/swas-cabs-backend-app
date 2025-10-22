@@ -21,12 +21,12 @@ class User extends Authenticatable
         'emergency_contacts',
         'language',
         'is_active',
-        'role', // 'passenger' or 'driver'
-          'adhar_number',
-          'is_verified',
-          'is_available',
-          'latitude',
-          'longitude',
+        'role', // 'passenger', 'driver', 'admin', 'super_admin'
+        'adhar_number',
+        'is_verified',
+        'is_available',
+        'latitude',
+        'longitude',
         'kyc_status',
         'kyc_verified_at',
     ];
@@ -42,57 +42,75 @@ class User extends Authenticatable
         'is_active' => 'boolean',
     ];
 
-    // Rides requested by the user (as a passenger)
+    // Scopes for role-based queries
+    public function scopeAdmins($query)
+    {
+        return $query->whereIn('role', ['admin', 'super_admin']);
+    }
+
+    public function scopeDrivers($query)
+    {
+        return $query->where('role', 'driver');
+    }
+
+    public function scopePassengers($query)
+    {
+        return $query->where('role', 'passenger');
+    }
+
+    // Existing relationships...
     public function ridesAsPassenger()
     {
         return $this->hasMany(Ride::class, 'user_id');
     }
 
-    // Rides driven by the user (as a driver)
     public function ridesAsDriver()
     {
         return $this->hasMany(Ride::class, 'user_id');
     }
 
-    // Documents (for drivers only)
     public function documents()
     {
         return $this->hasMany(RiderDocument::class, 'user_id');
     }
 
-    // Vehicles (for drivers only)
     public function vehicles()
     {
         return $this->hasMany(VehicleDetail::class, 'user_id');
     }
 
-    // Ratings given by the user (as a passenger)
     public function ratingsGiven()
     {
         return $this->hasMany(Rating::class, 'user_id');
     }
 
-    // Ratings received by the user (as a driver)
     public function ratingsReceived()
     {
         return $this->hasMany(Rating::class, 'user_id');
     }
 
-    // SOS alerts created by the user
     public function sosAlerts()
     {
         return $this->hasMany(SosAlert::class, 'user_id');
     }
 
-    // Check if the user is a driver
     public function isDriver()
     {
         return $this->role === 'driver';
     }
 
-    // Check if the user is a passenger
     public function isPassenger()
     {
         return $this->role === 'passenger';
+    }
+
+    public function isAdmin()
+    {
+        return in_array($this->role, ['admin', 'super_admin']);
+    }
+
+    public function isSuperAdmin()
+    {
+        return $this->role === 'super_admin';
     }
 }

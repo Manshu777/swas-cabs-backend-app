@@ -5,6 +5,12 @@
 use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Admin\UnitController;
+use App\Http\Controllers\Admin\RideController;
+use App\Http\Controllers\Admin\FinancialController;
+use App\Http\Controllers\Admin\PackageController;
+use App\Http\Controllers\Admin\SosController;
+use App\Http\Controllers\Admin\SettingsController;
 // use App\Http\Controllers\Admin\UserController;
 // use App\Http\Controllers\Admin\RoleController;
 // use App\Http\Controllers\Admin\PermissionController;
@@ -17,17 +23,28 @@ Route::get('/', function () {
 });
 
 
-
-Route::prefix('admin')->group(function () {
-    // Public login route
-    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('admin.login');
+  Route::get('/login', [LoginController::class, 'showLoginForm'])->name('admin.login');
     Route::post('/login', [LoginController::class, 'login']);
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-Route::get('/bookings', [DashboardController::class, 'bookings'])->name('admin.booking');
-Route::get('/users', [DashboardController::class, 'users'])->name('admin.users');
+
+Route::prefix('admin')->middleware(['auth', 'admin.access:admin,super_admin'])->name('admin.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/bookings', [DashboardController::class, 'bookings'])->name('bookings');
+    Route::get('/users', [DashboardController::class, 'users'])->name('users');
+    Route::get('/drivers', [DashboardController::class, 'driver'])->name('drivers'); // Note: renamed from 'driver' to 'drivers' for consistency
+    Route::get('/units', [UnitController::class, 'index'])->name('units');
+    Route::get('/rides', [RideController::class, 'index'])->name('rides');
+    Route::get('/financial', [FinancialController::class, 'index'])->name('financial');
+    Route::get('/packages', [PackageController::class, 'index'])->name('packages');
+    Route::get('/sos', [SosController::class, 'index'])->name('sos');
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+  
+});
+
+  Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 
-Route::get('/driver', [DashboardController::class, 'driver'])->name('admin.driver');
+
+
     // Authenticated routes
     // Route::middleware(['auth', 'admin'])->group(function () {
     //     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
@@ -37,4 +54,4 @@ Route::get('/driver', [DashboardController::class, 'driver'])->name('admin.drive
     //     Route::get('/settings', [SettingsController::class, 'index'])->name('admin.settings');
     //     Route::post('/settings', [SettingsController::class, 'update'])->name('admin.settings.update');
     // });
-});
+// });
