@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Drivers\RideController;
+use App\Http\Controllers\RideController;
 use App\Http\Controllers\Users\BookRidecontrolle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,28 +19,23 @@ Route::get('/user', function (Request $request) {
 
 
 
-
 Route::get('/calculate-distance', [PlacesController::class, 'calculateDistance']);
-
-
 Route::get('/places/search', [PlacesController::class, 'searchPlaces']);
 Route::get('/places/{placeId}', [PlacesController::class, 'getPlaceDetails']);
-
-
-
-
 
 
 Route::middleware('auth:sanctum')->post('/become-driver', [AuthController::class, 'becomeDriver']);
 
 
-Route::prefix("/v1/driver")->group(function(){
 
+
+
+
+
+//   driver routes
+Route::prefix("/v1/driver")->group(function(){
 Route::post("/register",[AuthController::class,"driverRegister"]);
 Route::post("/login ",[AuthController::class,"driverLogin"]);
-
-
-
 });
 
 
@@ -49,18 +44,36 @@ Route::post("/login ",[AuthController::class,"driverLogin"]);
 
 
 
-
+// user routes
 Route::prefix("/v1/user")->group(function(){
 Route::post("/genrate-otp", [AuthController::class,"generateAadhaarOtp"]);
 Route::post("/verify-otp", [AuthController::class,"verifyAdharOtp"]);
-
-
 Route::post("/login", [AuthController::class,"userLogin"]);
 Route::put("/update-contect",[AuthController::class,"userLogin"]);
 
 Route::post("/create-ride",[BookRidecontrolle::class,"createRide"]);
 
 });
+
+
+
+
+
+
+
+Route::prefix('/v1/rides')->group(function () {
+    Route::get('/', [RideController::class, 'index']);         
+    Route::post('/', [RideController::class, 'store']);         
+    Route::get('/{id}', [RideController::class, 'show']);      
+    Route::put('/{id}', [RideController::class, 'update']);   
+    Route::delete('/{id}', [RideController::class, 'destroy']); 
+    Route::post('/{id}/cancel', [RideController::class, 'cancel']); 
+});
+
+
+
+
+
 
 
 //

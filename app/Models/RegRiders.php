@@ -45,4 +45,11 @@ public function driverwallet(){
 }
 
 
+
+public function bookride(){
+    return $this->hasOne(Ride::class,"driver_id");
+}
+
+
+
 }

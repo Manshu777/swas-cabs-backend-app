@@ -28,4 +28,11 @@ class RegUsers extends Model
     {
         return $this->hasMany(Rides::class);
     }
+
+public function bookride(){
+    return $this->hasOne(Ride::class,"user_id");
+}
+
+
+
 }
