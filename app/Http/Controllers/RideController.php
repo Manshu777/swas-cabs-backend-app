@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Driverwallet;
 use App\Models\Ride;
 use Illuminate\Http\Request;
 
@@ -53,6 +54,15 @@ class RideController extends Controller
         if (!$ride) {
             return response()->json(['message' => 'Ride not found'], 404);
         }
+
+
+  $DriverWallet= Driverwallet::find($request->driver_id);
+  if($DriverWallet->amount <100){
+            return response()->json(['message' => 'Recharge your Wallet'], 404);
+
+  }
+
+
 
         $ride->update($request->only([
             'driver_id',
