@@ -31,32 +31,32 @@ $isMobile = request()->header('User-Agent') && preg_match('/Mobile|Android|iPhon
 
 {{-- Mobile Backdrop --}}
 @if($isMobile)
-<div class="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden hidden" id="mobile-backdrop" onclick="closeSidebar()"></div>
+<div class="fixed side-bar-col inset-0 z-40  bg-opacity-50 lg:hidden hidden" id="mobile-backdrop" onclick="closeSidebar()"></div>
 @endif
 
 <aside
     id="sidebar"
-    class="fixed inset-y-0 left-0 z-50 flex flex-col bg-white border-r border-gray-200 transition-transform duration-300 ease-in-out
+    class="fixed inset-y-0 left-0 z-50 flex flex-col  border-r  transition-transform duration-300 ease-in-out
            {{ $collapsed ? 'w-16' : 'w-72' }} transform -translate-x-full lg:translate-x-0"
 >
     {{-- Header --}}
-    <div class="flex h-16 items-center justify-between px-4 border-b border-gray-200">
+    <div class="flex h-16 items-center justify-between px-4 border-b ">
         <div class="flex items-center space-x-2 {{ $collapsed ? 'hidden' : '' }}">
-            <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-8 w-8 " fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
             </svg>
-            <h1 id="textappear" class="text-xl font-bold text-gray-900">TaxiAdmin</h1>
+            <h1 id="textappear" class="text-xl font-bold ">TaxiAdmin</h1>
         </div>
 
         <div class="flex items-center space-x-2">
-            <button onclick="toggleCollapsed()" class="hidden lg:block p-1.5 rounded-md hover:bg-gray-100">
+            <button onclick="toggleCollapsed()" class="hidden lg:block p-1.5 rounded-md ">
                 <svg class="h-4 w-4 transition-transform {{ $collapsed ? 'rotate-180' : '' }}" fill="none"
                      stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                 </svg>
             </button>
-            <button onclick="closeSidebar()" class="lg:hidden p-1.5 rounded-md hover:bg-gray-100">
+            <button onclick="closeSidebar()" class="lg:hidden p-1.5 rounded-md ">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M6 18L18 6M6 6l12 12"/>
@@ -70,7 +70,7 @@ $isMobile = request()->header('User-Agent') && preg_match('/Mobile|Android|iPhon
         @foreach ($navigation as $item)
             <a href="{{ $item['href'] }}"
                class="group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors
-                      {{ $item['active'] ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}"
+                      {{ $item['active'] ? ' border-r-2 ' : '' }}"
                title="{{ $collapsed ? $item['name'] : '' }}">
                 <svg class="flex-shrink-0 {{ $collapsed ? 'mx-auto h-6 w-6' : 'mr-3 h-5 w-5' }}" fill="none"
                      stroke="currentColor" viewBox="0 0 24 24">
@@ -82,15 +82,15 @@ $isMobile = request()->header('User-Agent') && preg_match('/Mobile|Android|iPhon
     </nav>
 
     {{-- Footer --}}
-    <div class="p-4 border-t border-gray-200">
+    <div class="p-4 border-t ">
         <div class="flex items-center {{ $collapsed ? 'justify-center' : 'space-x-3' }}">
-            <div class="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center">
-                <span class="text-sm font-medium text-white">{{ auth()->user()->name[0] }}</span>
+            <div class="h-8 w-8 rounded-full  flex items-center justify-center">
+                <span class="text-sm font-medium ">{{ auth()->user()->name[0] }}</span>
             </div>
 
             <div class="{{ $collapsed ? 'hidden' : 'flex-1 min-w-0' }}">
-                <p class="text-sm font-medium text-gray-900 truncate">{{ auth()->user()->name }}</p>
-                <p class="text-xs text-gray-500 truncate">{{ auth()->user()->email }}</p>
+                <p class="text-sm font-medium  truncate">{{ auth()->user()->name }}</p>
+                <p class="text-xs truncate">{{ auth()->user()->email }}</p>
             </div>
         </div>
 

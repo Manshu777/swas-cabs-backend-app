@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Broadcast;
 
 
+Broadcast::channel('chat', function ($user) {
+    return true; // ya authentication check
+});
+
 Broadcast::channel('ride.{rideId}', function ($user, $rideId) {
     return true; 
 });

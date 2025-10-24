@@ -4,17 +4,17 @@
 
 @section('content')
 <div class="mb-6">
-    <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+    <h1 class="text-3xl font-bold ">Dashboard</h1>
     <p class="text-gray-600 mt-1">Welcome back! Here's what's happening with your application.</p>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
     {{-- Total Revenue --}}
-    <div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="cards-data p-6 rounded-lg shadow-md">
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm font-medium text-gray-600">Total Revenue</p>
-                <p class="text-2xl font-bold text-gray-900">$45,231</p>
+                <p class="text-2xl font-bold ">$45,231</p>
                 <p class="text-sm text-green-600">+20.1% from last month</p>
             </div>
             <div class="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center">
@@ -26,11 +26,11 @@
     </div>
 
     {{-- New Bookings --}}
-    <div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="cards-data p-6 rounded-lg shadow-md">
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm font-medium text-gray-600">New Bookings</p>
-                <p class="text-2xl font-bold text-gray-900">156</p>
+                <p class="text-2xl font-bold ">156</p>
                 <p class="text-sm text-green-600">+15.3% from last month</p>
             </div>
             <div class="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center">
@@ -45,11 +45,11 @@
     </div>
 
     {{-- Rented Cars --}}
-    <div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="cards-data p-6 rounded-lg shadow-md">
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm font-medium text-gray-600">Rented Cars</p>
-                <p class="text-2xl font-bold text-gray-900">89</p>
+                <p class="text-2xl font-bold ">89</p>
                 <p class="text-sm text-green-600">+12.5% from last month</p>
             </div>
             <div class="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center">
@@ -64,11 +64,11 @@
     </div>
 
     {{-- Available Cars --}}
-    <div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="cards-data p-6 rounded-lg shadow-md">
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm font-medium text-gray-600">Available Cars</p>
-                <p class="text-2xl font-bold text-gray-900">67</p>
+                <p class="text-2xl font-bold ">67</p>
                 <p class="text-sm text-red-600">-8.2% from last month</p>
             </div>
             <div class="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center">
@@ -82,9 +82,9 @@
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     <!-- Recent Activity Table -->
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class=" rounded-lg shadow-md overflow-hidden">
         <div class="p-6 border-b border-gray-200">
-            <h2 class="text-lg font-semibold text-gray-900">Recent Activity</h2>
+            <h2 class="text-lg font-semibold ">Recent Activity</h2>
         </div>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
@@ -95,19 +95,19 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody class=" divide-y divide-gray-200">
                     <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">John Doe</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium ">John Doe</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Created new order #123</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2 hours ago</td>
                     </tr>
                     <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Jane Smith</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium ">Jane Smith</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Updated profile</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1 day ago</td>
                     </tr>
                     <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Bob Johnson</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium ">Bob Johnson</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Logged in</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">3 days ago</td>
                     </tr>
@@ -117,8 +117,8 @@
     </div>
 
     <!-- Quick Actions -->
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
+    <div class=" rounded-lg shadow-md p-6">
+        <h2 class="text-lg font-semibold  mb-4">Quick Actions</h2>
         <div class="space-y-3">
             <a href="#" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                 <svg class="w-5 h-5 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -11,12 +11,15 @@ use App\Http\Controllers\Admin\FinancialController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\SosController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\ChatController;
+
+//ChatController
 // use App\Http\Controllers\Admin\UserController;
 // use App\Http\Controllers\Admin\RoleController;
 // use App\Http\Controllers\Admin\PermissionController;
 // use App\Http\Controllers\Admin\SettingsController;
 
-
+use Illuminate\Support\Facades\Artisan;
 
 Route::get('/', function () {
     return view('welcome');
@@ -27,6 +30,12 @@ Route::get('/', function () {
     Route::post('/login', [LoginController::class, 'login']);
 
 Route::prefix('admin')->middleware(['auth', 'admin.access:admin,super_admin'])->name('admin.')->group(function () {
+
+  Route::get('/clear-cache', function () {
+    Artisan::call('optimize:clear');
+    return response()->json(['message' => '✅ Cache cleared successfully!']);
+})->name('admin.clear-cache');
+
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/bookings', [DashboardController::class, 'bookings'])->name('bookings');
     Route::get('/users', [DashboardController::class, 'users'])->name('users');
@@ -41,6 +50,10 @@ Route::prefix('admin')->middleware(['auth', 'admin.access:admin,super_admin'])->
 });
 
   Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+
+ Route::get('/chat', [ChatController::class, 'index']);
+    Route::post('/messages', [ChatController::class, 'sendMessage']);
 
 
 

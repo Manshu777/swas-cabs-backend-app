@@ -11,17 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('driverwallets', function (Blueprint $table) {
+        Schema::create('messages', function (Blueprint $table) {
             $table->id();
-            $table->integer("amount");
-            $table->foreignId("driver_id")->constrained()->onDelete("cascade");
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+    $table->text('message');
             $table->timestamps();
         });
     }
 
-   
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('driverwallets');
+        Schema::dropIfExists('messages');
     }
 };

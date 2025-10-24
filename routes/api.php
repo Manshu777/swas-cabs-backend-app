@@ -8,6 +8,7 @@ use App\Http\Controllers\Users\SosAlertControler as SOSController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DriverVerificationController;
 use App\Http\Controllers\Drivers\VehicleDetailsController;
+use App\Events\TestEvent;
 
 use App\Http\Controllers\Users\PlacesController;
 
@@ -17,7 +18,10 @@ Route::get('/user', function (Request $request) {
 
 
 
-
+Route::get('/test-broadcast', function () {
+    event(new TestEvent("Hello, Laravel WebSocket!"));
+    return response()->json(['status' => 'Message broadcasted!']);
+});
 
 Route::get('/calculate-distance', [PlacesController::class, 'calculateDistance']);
 Route::get('/places/search', [PlacesController::class, 'searchPlaces']);

@@ -4,112 +4,87 @@ namespace App\Http\Controllers;
 
 use App\Models\Driverwallet;
 use App\Models\Ride;
+use App\Models\RideOffer;
 use Illuminate\Http\Request;
 
 class RideController extends Controller
 {
-      public function index()
-    {
-        $rides = Ride::with(['user', 'driver'])->latest()->get();
-        return response()->json($rides);
-    }
-
-  
+    // 1️⃣ User books ride
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $data = $request->validate([
             'user_id' => 'required|exists:users,id',
             'pickup_location' => 'required|string',
             'drop_location' => 'required|string',
-            'distance' => 'nullable|numeric',
-            'price' => 'nullable|numeric',
-            'payment_method' => 'nullable|string',
         ]);
 
-        $ride = Ride::create($validated);
+        $ride = Ride::create($data);
+
+        broadcast(new \App\Events\RideRequested($ride))->toOthers();
 
         return response()->json([
-            'message' => 'Ride booked successfully!',
-            'ride' => $ride,
-        ]);
-    }
-
-
-     public function show($id)
-    {
-        $ride = Ride::with(['user', 'driver'])->find($id);
-
-        if (!$ride) {
-            return response()->json(['message' => 'Ride not found'], 404);
-        }
-
-        return response()->json($ride);
-    }
-
-
-    public function update(Request $request, $id)
-    {
-        $ride = Ride::find($id);
-
-        if (!$ride) {
-            return response()->json(['message' => 'Ride not found'], 404);
-        }
-
-
-  $DriverWallet= Driverwallet::find($request->driver_id);
-  if($DriverWallet->amount <100){
-            return response()->json(['message' => 'Recharge your Wallet'], 404);
-
-  }
-
-
-
-        $ride->update($request->only([
-            'driver_id',
-            'status',
-            'price',
-            'payment_status',
-            'payment_method',
-            'pickup_time',
-            'drop_time',
-        ]));
-
-        return response()->json([
-            'message' => 'Ride updated successfully',
+            'message' => 'Ride requested successfully',
             'ride' => $ride
         ]);
     }
 
+    // 2️⃣ Driver sends offer
+    public function offer(Request $request, $rideId)
+    {
+        $data = $request->validate([
+            'driver_id' => 'required|exists:reg_riders,id',
+            'offer_price' => 'required|numeric|min:10',
+        ]);
 
+        $offer = RideOffer::create([
+            'ride_id' => $rideId,
+            'driver_id' => $data['driver_id'],
+            'offer_price' => $data['offer_price']
+        ]);
 
-      public function cancel($id)
+        broadcast(new \App\Events\RideOfferCreated($offer))->toOthers();
+
+        return response()->json(['message' => 'Offer sent', 'offer' => $offer]);
+    }
+
+    // 3️⃣ Get all offers for a ride
+    public function offers($rideId)
+    {
+        $offers = RideOffer::with('driver')->where('ride_id', $rideId)->get();
+        return response()->json($offers);
+    }
+
+    // 4️⃣ User confirms one driver
+    public function confirm(Request $request, $rideId)
+    {
+        $data = $request->validate([
+            'driver_id' => 'required|exists:reg_riders,id',
+        ]);
+
+        $ride = Ride::findOrFail($rideId);
+
+        $ride->update([
+            'driver_id' => $data['driver_id'],
+            'status' => 'confirmed'
+        ]);
+
+        RideOffer::where('ride_id', $rideId)->update(['status' => 'rejected']);
+        RideOffer::where('ride_id', $rideId)
+            ->where('driver_id', $data['driver_id'])
+            ->update(['status' => 'accepted']);
+
+        broadcast(new \App\Events\RideConfirmed($ride))->toOthers();
+
+        return response()->json(['message' => 'Ride confirmed', 'ride' => $ride]);
+    }
+
+    // 5️⃣ Cancel ride
+    public function cancel($id)
     {
         $ride = Ride::find($id);
-
-        if (!$ride) {
-            return response()->json(['message' => 'Ride not found'], 404);
-        }
+        if (!$ride) return response()->json(['message' => 'Ride not found'], 404);
 
         $ride->update(['status' => 'cancelled']);
-
-        return response()->json(['message' => 'Ride cancelled successfully']);
+        return response()->json(['message' => 'Ride cancelled']);
     }
-
-     public function destroy($id)
-    {
-        $ride = Ride::find($id);
-
-        if (!$ride) {
-            return response()->json(['message' => 'Ride not found'], 404);
-        }
-
-        $ride->delete();
-
-        return response()->json(['message' => 'Ride deleted successfully']);
-    }
-
-
-
-
-
 }

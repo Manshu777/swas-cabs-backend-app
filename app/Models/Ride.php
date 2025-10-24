@@ -23,12 +23,17 @@ class Ride extends Model
     // Relationships
     public function user()
     {
-        return $this->belongsTo(RegUsers::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function driver()
+     public function driver()
     {
-        return $this->belongsTo(RegRiders::class);
+        return $this->belongsTo(User::class, 'driver_id');
+    }
+
+    public function offers()
+    {
+        return $this->hasMany(RideOffer::class);
     }
 
 }

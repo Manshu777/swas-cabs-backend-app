@@ -11,7 +11,8 @@
     </style>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 </head>
-<body class="bg-gray-100 font-sans">
+<body class="bg-gray-100 font-sans transition-colors duration-500">
+
     <div class="flex min-h-screen">
         {{-- Sidebar --}}
         @include('layouts.partials.sidebar')
@@ -96,6 +97,27 @@
         }
     });
 </script>
+ 
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    // Apply stored theme on load
+    if (localStorage.getItem('theme') === 'dark') {
+        body.classList.add('dark');
+    } else {
+        body.classList.remove('dark');
+    }
+
+    // Toggle on click
+    themeToggle?.addEventListener('click', function () {
+        const isDark = body.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+});
+</script>
+
 <script>
     const checkSidebarState =()=>{
             const sidebar = document.getElementById('sidebar');

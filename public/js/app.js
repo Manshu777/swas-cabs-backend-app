@@ -1,6 +1,5 @@
 
 
-import './bootstrap'; // yaha axios aur csrf configure hoga
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 
