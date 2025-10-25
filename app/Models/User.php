@@ -71,12 +71,12 @@ class User extends Authenticatable
 
     public function documents()
     {
-        return $this->hasMany(RiderDocument::class, 'user_id');
+        return $this->hasMany(RiderDocuments::class, 'user_id');
     }
 
     public function vehicles()
     {
-        return $this->hasMany(VehicleDetail::class, 'user_id');
+        return $this->hasMany(VehicleDetails::class, 'user_id');
     }
 
     public function ratingsGiven()

@@ -1,44 +1,40 @@
 <?php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
-    /**
-     * Run the migrations.
-     */
+return new class extends Migration {
     public function up(): void
     {
-        Schema::create('rides', function (Blueprint $table) {
-            $table->id();
-
-            $table->string('pickup_location');
-            $table->string('drop_location');
-            $table->decimal('distance', 8, 2)->nullable();
-            $table->decimal('price', 10, 2)->nullable();
-            $table->enum('status', ['pending', 'accepted', 'ongoing', 'completed', 'cancelled'])->default('pending');
-            $table->timestamp('pickup_time')->nullable();
-            $table->timestamp('drop_time')->nullable();
-            $table->enum('payment_status', ['pending', 'paid'])->default('pending');
-            $table->string('payment_method')->nullable();
-
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('driver_id')->nullable();
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('driver_id')->references('id')->on('users')->onDelete('set null');
-
-            $table->timestamps();
+        Schema::table('rides', function (Blueprint $table) {
+            $table->decimal('pickup_latitude', 10, 6)->after('pickup_location')->nullable();
+            $table->decimal('pickup_longitude', 10, 6)->after('pickup_latitude')->nullable();
+            $table->decimal('dropoff_latitude', 10, 6)->after('drop_location')->nullable();
+            $table->decimal('dropoff_longitude', 10, 6)->after('dropoff_latitude')->nullable();
+            $table->decimal('current_latitude', 10, 6)->after('dropoff_longitude')->nullable();
+            $table->decimal('current_longitude', 10, 6)->after('current_latitude')->nullable();
+            $table->string('package_name')->after('dropoff_longitude')->nullable();
+            $table->timestamp('scheduled_at')->after('package_name')->nullable();
+            $table->decimal('fare', 10, 2)->after('price')->nullable();
+            $table->index(['pickup_latitude', 'pickup_longitude'], 'pickup_location_index');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('rides');
+        Schema::table('rides', function (Blueprint $table) {
+            $table->dropColumn([
+                'pickup_latitude',
+                'pickup_longitude',
+                'dropoff_latitude',
+                'dropoff_longitude',
+                'current_latitude',
+                'current_longitude',
+                'package_name',
+                'scheduled_at',
+                'fare'
+            ]);
+            $table->dropIndex('pickup_location_index');
+        });
     }
 };

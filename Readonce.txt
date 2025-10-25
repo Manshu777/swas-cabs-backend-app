@@ -1,0 +1,62 @@
+@extends('layouts.admin')
+@section('content')
+    <div id="sos-alerts">
+        <h1>SOS Alerts</h1>
+        @foreach ($sosAlerts as $alert)
+            <div>
+                Alert ID: {{ $alert->id }}<br>
+                User: {{ $alert->user->name }}<br>
+                Location: {{ $alert->location }} ({{ $alert->latitude }}, {{ $alert->longitude }})<br>
+                Status: {{ $alert->status }}
+            </div>
+        @endforeach
+        {{ $sosAlerts->links() }}
+    </div>
+
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+    <script>
+        const pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
+            cluster: '{{ env('PUSHER_APP_CLUSTER') }}',
+            forceTLS: true
+        });
+        const channel = pusher.subscribe('admin.sos');
+        channel.bind('sos.alert', function(data) {
+            console.log('New SOS Alert:', data.sosAlert);
+            const alertDiv = document.createElement('div');
+            alertDiv.innerHTML = `
+                Alert ID: ${data.sosAlert.id}<br>
+                User: ${data.sosAlert.user_id}<br>
+                Location: ${data.sosAlert.location} (${data.sosAlert.latitude}, ${data.sosAlert.longitude})<br>
+                Status: ${data.sosAlert.status}
+            `;
+            document.getElementById('sos-alerts').prepend(alertDiv);
+        });
+    </script>
+@endsection
+
+
+
+this is admin code for location update check if needed use this 
+
+
+React Native app to subscribe to Pusher channel | import Pusher from 'pusher-js';
+const pusher = new Pusher('24a7ca3bec34f858d2c4', { cluster: 'ap2' });
+const channel = pusher.subscribe('private-user.' + userId);
+channel.bind('driver.location', (data) => {
+    console.log('Driver Location:', data);
+    // Update map with data.lat, data.lng, data.bearing
+});
+channel.bind('driver.counter', (data) => {
+    console.log('Counter Offer:', data);
+    // Show counter-offer to user
+});
+const driverChannel = pusher.subscribe('private-driver.' + driverId);
+driverChannel.bind('ride.request', (data) => {
+    console.log('New Ride Request:', data);
+    // Notify driver
+});
+
+
+
+update two tables command | php artisan make:migration update_rides_table
+php artisan make:migration update_sos_alerts_table

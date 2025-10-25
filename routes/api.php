@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\RideController;
+use App\Http\Controllers\SosAlertController;
 use App\Http\Controllers\Users\BookRidecontrolle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,7 +33,18 @@ Route::middleware('auth:sanctum')->post('/become-driver', [AuthController::class
 
 
 
+Route::middleware('auth:api')->post('/drivers/{id}/location', [App\Http\Controllers\Drivers\LocationController::class, 'update']);
 
+Route::middleware('auth:api')->group(function () {
+    Route::post('/rides', [App\Http\Controllers\Api\RideController::class, 'store']);
+    Route::get('/rides', [App\Http\Controllers\Api\RideController::class, 'passengerRides']);
+    Route::post('/rides/{ride}/accept', [App\Http\Controllers\Api\RideController::class, 'accept']);
+    Route::post('/rides/{ride}/status', [App\Http\Controllers\Api\RideController::class, 'updateStatus']);
+    Route::get('/drivers/rides', [App\Http\Controllers\Api\RideController::class, 'driverRides']);
+    Route::get('/drivers/ratings', [App\Http\Controllers\Api\RideController::class, 'driverRatings']);
+    Route::post('/sos', [SosAlertController::class, 'store']);
+    Route::post('/drivers/{id}/location', [App\Http\Controllers\Drivers\LocationController::class, 'update']);
+});
 
 
 

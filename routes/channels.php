@@ -1,25 +1,18 @@
 <?php
-
 use Illuminate\Support\Facades\Broadcast;
 
-
-Broadcast::channel('chat', function ($user) {
-    return true; // ya authentication check
-});
-
-Broadcast::channel('ride.{rideId}', function ($user, $rideId) {
-    return true; 
-});
-
-Broadcast::channel('rides', function ($user) {
-    return $user->is_admin ?? false;
-});
-
-Broadcast::channel('fare.{userId}', function ($user, $userId) {
-    return (int) $user->id === (int) $userId;
-});
-
-
-Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
+Broadcast::channel('private-user.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
+});
+
+Broadcast::channel('private-driver.{id}', function ($user, $id) {
+    return (int) $user->id === (int) $id && $user->role === 'driver';
+});
+
+Broadcast::channel('admin.sos', function ($user) {
+    return $user->role === 'admin';
+});
+
+Broadcast::channel('public-nearby.{geohash}', function ($user) {
+    return $user->role === 'driver' && $user->is_available;
 });
