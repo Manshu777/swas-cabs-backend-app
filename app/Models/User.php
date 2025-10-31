@@ -21,8 +21,9 @@ class User extends Authenticatable
         'emergency_contacts',
         'language',
         'is_active',
+        'full_address',
         'role', // 'passenger', 'driver', 'admin', 'super_admin'
-        'adhar_number',
+        'aadhaar_number',
         'is_verified',
         'is_available',
         'latitude',

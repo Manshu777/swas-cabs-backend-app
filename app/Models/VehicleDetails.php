@@ -21,6 +21,6 @@ class VehicleDetails extends Model
 
     public function driver()
     {
-        return $this->belongsTo(User::class, 'driver_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
