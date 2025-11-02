@@ -39,7 +39,20 @@ Route::prefix('admin')->middleware(['auth', 'admin.access:admin,super_admin'])->
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/bookings', [DashboardController::class, 'bookings'])->name('bookings');
     Route::get('/users', [DashboardController::class, 'users'])->name('users');
-    Route::get('/drivers', [DashboardController::class, 'driver'])->name('drivers'); // Note: renamed from 'driver' to 'drivers' for consistency
+    Route::get('/drivers', [DashboardController::class, 'driver'])->name('drivers');
+     Route::get('/documents', [DashboardController::class, 'document'])->name('documents');  
+     
+      Route::get('documents/{id}', [DashboardController::class, 'show'])->name('documents.show');
+    Route::put('documents/{id}/approve', [DashboardController::class, 'approve'])->name('documents.approve');
+    Route::put('documents/{id}/reject', [DashboardController::class, 'reject'])->name('documents.reject');
+
+    
+
+        Route::get('/vehicle', [DashboardController::class, 'vehicle'])->name('vehicles');  
+
+
+
+
     Route::get('/units', [UnitController::class, 'index'])->name('units');
     Route::get('/rides', [RideController::class, 'index'])->name('rides');
     Route::get('/financial', [FinancialController::class, 'index'])->name('financial');
