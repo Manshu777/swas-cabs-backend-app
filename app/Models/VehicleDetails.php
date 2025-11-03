@@ -17,6 +17,8 @@ class VehicleDetails extends Model
         'vehicle_type',
         'year',
         'color',
+        "status",
+        "rejection_reason",
     ];
 
     public function driver()

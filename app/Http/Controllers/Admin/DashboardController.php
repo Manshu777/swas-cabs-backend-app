@@ -80,7 +80,7 @@ $document = Riderdocuments::find($id)->update(["status"=>"rejected","rejection_r
  public function approve ($id){
 $document = Riderdocuments::find($id)->update(["status"=>"approved","rejection_reason"=>null]);
 
-     return redirect()->back()->with("success","Document rejected");
+     return redirect()->back()->with("success","Document Approve");
 
 
  }
@@ -96,6 +96,18 @@ public function vehicle (){
 
 }
 
+ public function vehicleapprove ($id){
+$document = VehicleDetails::find($id)->update(["status"=>"approved","rejection_reason"=>null]);
+
+     return redirect()->back()->with("success","Vehicle Approve");
+
+
+ }
+public function vehiclereject(Request $request,$id){
+
+$document = VehicleDetails::find($id)->update(["status"=>"rejected","rejection_reason"=>$request["rejection_reason"]]);
+ return redirect()->back()->with("success","Document rejected");
+}
 
 
 

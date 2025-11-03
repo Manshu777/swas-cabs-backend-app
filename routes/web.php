@@ -49,6 +49,8 @@ Route::prefix('admin')->middleware(['auth', 'admin.access:admin,super_admin'])->
     
 
         Route::get('/vehicle', [DashboardController::class, 'vehicle'])->name('vehicles');  
+    Route::put('vehicle/{id}/approve', [DashboardController::class, 'vehicleapprove'])->name('vehicles.approve');
+    Route::put('vehicles/{id}/reject', [DashboardController::class, 'vehiclereject'])->name('vehicles.reject');
 
 
 
