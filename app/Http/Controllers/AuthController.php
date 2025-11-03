@@ -143,7 +143,7 @@ class AuthController extends Controller
                 'nullable',
                 'string'
             ],
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'profile_image' => 'nullable',
             'emergency_contacts' => 'nullable|json',
             'reference_id' => 'required',
         ]);
@@ -256,17 +256,18 @@ class AuthController extends Controller
         if ($user->role === 'driver') {
             return response()->json(['message' => 'User is already a driver'], 400);
         }
+        Log::info('Becoming Driver Request:', $request->all());
 
         $validator = Validator::make($request->all(), [
             'license_number' => 'required|string',
-            'license_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            // 'aadhaar_front_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            // 'aadhaar_back_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'license_image' => 'nullable',
+            // 'aadhaar_front_image' => 'nullable',
+            // 'aadhaar_back_image' => 'nullable',
             'vehicle_rc_number' => 'required|string',
-            'vehicle_rc_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'vehicle_rc_image' => 'required',
             'insurance_number' => 'required|string',
-            'insurance_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'police_verification_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'insurance_image' => 'required',
+            'police_verification_image' => 'nullable',
             'brand' => 'required|string',
             'model' => 'required|string',
             'vehicle_type' => 'required|string',
@@ -274,6 +275,8 @@ class AuthController extends Controller
             'year' => 'required|string',
             'color' => 'required|string',
         ]);
+        Log::info('Becoming Driver Request:', $validator->errors()->all());
+
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
