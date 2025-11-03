@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\RiderDocuments;
+use App\Models\VehicleDetails;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Ride;
@@ -48,4 +50,56 @@ class DashboardController extends Controller
 
         return view('admin.driver.index');
     }
+
+
+
+     public function document()
+    {
+      
+
+
+$documents = Riderdocuments::orderBy('created_at', 'desc')->paginate(10);
+
+// return response()->json(["docume"=>$documents]);
+
+        return view('admin.documents.index',compact("documents"));
+    }
+
+
+
+    public function reject(Request $request,$id){
+
+
+$document = Riderdocuments::find($id)->update(["status"=>"rejected","rejection_reason"=>$request["rejection_reason"]]);
+ return redirect()->back()->with("success","Document rejected");
+
+    }
+
+
+
+ public function approve ($id){
+$document = Riderdocuments::find($id)->update(["status"=>"approved","rejection_reason"=>null]);
+
+     return redirect()->back()->with("success","Document rejected");
+
+
+ }
+
+
+
+public function vehicle (){
+ 
+    $vehicles = VehicleDetails::orderBy('created_at', 'desc')->paginate(10);
+
+
+            return view('admin.vehicles.index',compact("vehicles"));
+
 }
+
+
+
+
+
+}
+
+
