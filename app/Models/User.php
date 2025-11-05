@@ -72,7 +72,7 @@ class User extends Authenticatable
 
     public function documents()
     {
-        return $this->hasMany(RiderDocuments::class, 'user_id');
+        return $this->hasMany(Driverdocument::class, 'driver_id');
     }
 
     public function vehicles()
