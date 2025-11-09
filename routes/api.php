@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RideController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SosAlertController;
 use App\Http\Controllers\Users\BookRideController;
 use App\Http\Controllers\Users\PlacesController;
@@ -59,7 +60,14 @@ Route::prefix('v1')->group(function () {
 
         Route::post('/sos', [SosAlertController::class, 'store']);
         Route::apiResource('vehicle-details', VehicleDetailsController::class);
+
+
+
     });
+
+    Route::post("/service/create",[ServiceController::class,"store"]);
+
+    
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
