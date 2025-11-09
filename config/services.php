@@ -32,6 +32,18 @@ return [
     'api_key' => env('GOOGLE_MAPS_API_KEY'),
 ],
 
+'twilio' => [
+        'sid'                => env('TWILIO_SID'),
+        'auth_token'         => env('TWILIO_AUTH_TOKEN'),
+        'messaging_service_sid' => env('TWILIO_MESSAGING_SERVICE_SID'),
+        'from'               => env('TWILIO_FROM'), 
+    ],
+    'google' => [
+    'client_id'     => env('GOOGLE_CLIENT_ID'),
+    'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+    'redirect'      => env('GOOGLE_REDIRECT_URL'),
+],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

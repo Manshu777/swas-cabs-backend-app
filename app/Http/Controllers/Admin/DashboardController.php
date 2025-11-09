@@ -67,24 +67,37 @@ $documents = Riderdocuments::orderBy('created_at', 'desc')->paginate(10);
 
 
 
-    public function reject(Request $request,$id){
+public function reject(Request $request, $id)
+{
+    $document = Riderdocuments::findOrFail($id);
 
+    // Update document
+    $document->update([
+        "status" => "rejected",
+        "rejection_reason" => $request->input("rejection_reason")
+    ]);
 
-$document = Riderdocuments::find($id)->update(["status"=>"rejected","rejection_reason"=>$request["rejection_reason"]]);
- return redirect()->back()->with("success","Document rejected");
+    // Update user's is_verified to false
+    User::where('id', $document->user_id)->update(['is_verified' => false]);
 
-    }
+    return redirect()->back()->with("success", "Document rejected");
+}
 
+public function approve($id)
+{
+    $document = Riderdocuments::findOrFail($id);
 
+    // Update document
+    $document->update([
+        "status" => "approved",
+        "rejection_reason" => null
+    ]);
 
- public function approve ($id){
-$document = Riderdocuments::find($id)->update(["status"=>"approved","rejection_reason"=>null]);
+    // Update user's is_verified to true
+    User::where('id', $document->user_id)->update(['is_verified' => true]);
 
-     return redirect()->back()->with("success","Document Approve");
-
-
- }
-
+    return redirect()->back()->with("success", "Document approved");
+}
 
 
 public function vehicle (){

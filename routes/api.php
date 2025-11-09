@@ -12,9 +12,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
     // Public routes
-    Route::post('/generate-otp', [AuthController::class, 'generateAadhaarOtp']);
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login', [AuthController::class, 'userLogin']);
+   Route::post('otp/send',    [AuthController::class, 'sendTwilioOtp']);
+   Route::post('otp/verify', [AuthController::class, 'verifyTwilioOtp']);
+   Route::post('register',   [AuthController::class, 'register']);
+   Route::post('login',      [AuthController::class, 'userLogin']);
+   Route::get('auth/google',        [AuthController::class, 'redirectToGoogle']);
+   Route::get('auth/google/callback',[AuthController::class, 'handleGoogleCallback']);
+
     Route::get('/places/search', [PlacesController::class, 'searchPlaces']);
     Route::get('/places/{placeId}', [PlacesController::class, 'getPlaceDetails']);
     Route::get('/calculate-distance', [PlacesController::class, 'calculateDistance']);

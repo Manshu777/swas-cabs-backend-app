@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\RiderDocuments as DriverDocument;
+use App\Models\RiderDocuments;
 use App\Models\VehicleDetails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
+
+use Twilio\Rest\Client as TwilioClient;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -25,229 +28,183 @@ class AuthController extends Controller
         $this->apiSecret = env('AADHAAR_SANDBOX_SECRET');
     }
 
-    public function generateAadhaarOtp(Request $request)
+     public function sendTwilioOtp(Request $request)
     {
         $request->validate([
-            'aadhaar_number' => 'required|string|size:12',
+            'phone' => 'required|string|regex:/^\+?[1-9]\d{9,14}$/',
         ]);
 
+        $phone = $request->phone;
+        $otp   = rand(100000, 999999);               // 6-digit OTP
+        $expires = now()->addMinutes(5);
+
+        Cache::put("otp:{$phone}", ['otp' => $otp, 'expires' => $expires], $expires);
+
+        $twilio = new TwilioClient(config('services.twilio.sid'), config('services.twilio.auth_token'));
+
         try {
-            $accessToken = $this->getAccessToken();
-            if (!$accessToken) {
-                return response()->json(['message' => 'Failed to get access token'], 401);
-            }
-
-            Log::info('Access Token: ' . $accessToken);
-
-            $headers = [
-                'accept' => 'application/json',
-                'authorization' => $accessToken,
-                'x-api-key' => $this->apiKey,
-                'x-api-version' => '2.0',
-                'content-type' => 'application/json',
-            ];
-
-            $payload = [
-                '@entity' => 'in.co.sandbox.kyc.aadhaar.okyc.otp.request',
-                'reason' => 'for kyc',
-                'consent' => 'y',
-                'aadhaar_number' => $request->aadhaar_number,
-            ];
-
-            $otpResponse = Http::withHeaders($headers)
-                ->post('https://api.sandbox.co.in/kyc/aadhaar/okyc/otp', $payload);
-
-            Log::info('OTP Response:', $otpResponse->json());
-
-            if ($otpResponse->failed()) {
-                return response()->json([
-                    'message' => 'Failed to generate Aadhaar OTP',
-                    'error' => $otpResponse->json(),
-                ], 400);
-            }
-
-            $otpData = $otpResponse->json();
+            $twilio->messages->create(
+                $phone,
+                [
+                    'from' => config('services.twilio.from'),
+                    'body' => "Your verification code is {$otp}. It expires in 5 minutes.",
+                ]
+            );
 
             return response()->json([
-                'message' => 'OTP sent successfully to Aadhaar-linked mobile number',
-                'txn_id' => $otpData['data']['txn_id'] ?? null,
-                'response' => $otpData,
+                'message' => 'OTP sent successfully',
+                'phone'   => $phone,
             ]);
-        } catch (\Exception $e) {
-            Log::error('Aadhaar OTP Error: ' . $e->getMessage());
-            return response()->json([
-                'message' => 'Something went wrong',
-                'error' => $e->getMessage(),
-            ], 500);
+        } catch (Exception $e) {
+            Log::error('Twilio OTP error: ' . $e->getMessage());
+            return response()->json(['message' => 'Failed to send OTP'], 500);
         }
     }
 
-    private function getAccessToken()
+    public function verifyTwilioOtp(Request $request)
     {
-        $tokenData = Cache::get('sandbox_access_token');
+        $request->validate([
+            'phone' => 'required|string',
+            'otp'   => 'required|digits:6',
+        ]);
 
-        if ($tokenData && isset($tokenData['access_token'], $tokenData['expires_at'])) {
-            if (now()->lt($tokenData['expires_at'])) {
-                return $tokenData['access_token'];
-            }
+        $cacheKey = "otp:{$request->phone}";
+        $data     = Cache::get($cacheKey);
+
+        if (!$data || now()->gt($data['expires'])) {
+            return response()->json(['message' => 'OTP expired or not found'], 400);
         }
 
-        $authResponse = Http::withHeaders([
-            'accept' => 'application/json',
-            'x-api-key' => $this->apiKey,
-            'x-api-secret' => $this->apiSecret,
-            'x-api-version' => '2.0',
-        ])->post('https://api.sandbox.co.in/authenticate');
-
-        if ($authResponse->failed()) {
-            Log::error('Sandbox Auth Failed:', $authResponse->json());
-            return null;
+        if ($data['otp'] != $request->otp) {
+            return response()->json(['message' => 'Invalid OTP'], 400);
         }
 
-        $authData = $authResponse->json();
-        $accessToken = $authData['data']['access_token'] ?? null;
-        $timestamp = $authData['timestamp'] ?? now()->timestamp;
+        // OTP valid → mark phone as verified for the next step
+        Cache::forget($cacheKey);
+        Cache::put("verified_phone:{$request->phone}", true, now()->addHours(2));
 
-        if (!$accessToken) {
-            Log::error('No access token found in Sandbox auth response:', $authData);
-            return null;
-        }
-
-        $expiresAt = now()->addHours(24);
-        Cache::put('sandbox_access_token', [
-            'access_token' => $accessToken,
-            'timestamp' => $timestamp,
-            'expires_at' => $expiresAt,
-        ], $expiresAt);
-
-        Log::info('New Sandbox Access Token cached at ' . now() . ' with expiry ' . $expiresAt);
-
-        return $accessToken;
+        return response()->json(['message' => 'Phone verified successfully']);
     }
+
+    /** ---------- REGISTER WITH TWILIO OTP ---------- **/
 
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'aadhaar_number' => [
-                'required',
-                'string',
-                'size:12'
-            ],
-            'aadhaar_otp' => 'required|string|size:6',
-            'email' => [
-                'required',
-                'email'
-            ],
-            'password' => 'required|string|min:8|confirmed',
-            'phone' => [
-                'nullable',
-                'string'
-            ],
-            'profile_image' => 'nullable',
+            'phone'   => 'required|string|regex:/^\+?[1-9]\d{9,14}$/',
+            'email'   => 'required|email|unique:users,email',
+            'password'=> 'required|string|min:8|confirmed',
+            'profile_image' => 'nullable|image',
             'emergency_contacts' => 'nullable|json',
-            'reference_id' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
-        // Verify Aadhaar OTP
-        $token = $this->getAccessToken();
-        if (!$token) {
-            return response()->json(['message' => 'Token fetch failed'], 401);
+        // Verify phone via cached flag
+        if (!Cache::has("verified_phone:{$request->phone}")) {
+            return response()->json(['message' => 'Phone number not verified with OTP'], 403);
         }
 
-        $headers = [
-            'accept' => 'application/json',
-            'authorization' => $token,
-            'x-api-key' => $this->apiKey,
-            'x-api-version' => '2.0',
-            'content-type' => 'application/json',
-        ];
-
-        $payload = [
-            '@entity' => 'in.co.sandbox.kyc.aadhaar.okyc.request',
-            'reference_id' => $request->reference_id,
-            'otp' => $request->aadhaar_otp,
-        ];
-
-        $response = Http::withHeaders($headers)->post('https://api.sandbox.co.in/kyc/aadhaar/okyc/otp/verify', $payload);
-        if ($response->failed()) {
-            return response()->json(['message' => 'KYC verification failed', 'error' => $response->json()], 400);
-        }
-
-        $data = $response->json();
-        if (!isset($data['data']['status']) || $data['data']['status'] !== 'VALID') {
-            return response()->json(['message' => 'Invalid or expired OTP', 'response' => $data], 400);
-        }
-
-        $aadhaar = $data['data'];
-        $profileImagePath = $request->hasFile('profile_image')
+        $profilePath = $request->hasFile('profile_image')
             ? $request->file('profile_image')->store('profile_images', 'public')
             : null;
 
-        // Register as user with Aadhaar data
-        $user = User::updateOrCreate(
-            ['aadhaar_number' => $request->aadhaar_number],
-            [
-                'name' => $aadhaar['name'] ?? null,
-                'gender' => $aadhaar['gender'] ?? null,
-                'email' => $request->email,
-                
-                'phone' => $request->phone,
-                'password' => Hash::make($request->password),
-                'dob' => $aadhaar['date_of_birth'] ?? null,
-                'full_address' => $aadhaar['full_address'] ?? null,
-                'profile_image' => $profileImagePath,
-                'emergency_contacts' => $request->emergency_contacts,
-                'kyc_status' => 'verified',
-                'kyc_verified_at' => now(),
-                'role' => 'user',
-                'is_verified' => false,
-            ]
-        );
+        $user = User::create([
+            'phone'              => $request->phone,
+            'email'              => $request->email,
+            'password'           => Hash::make($request->password),
+            'profile_image'      => $profilePath,
+            'emergency_contacts' => $request->emergency_contacts,
+            'kyc_status'         => 'none',   // no Aadhaar now
+            'role'               => 'user',
+            'is_verified'        => true,
+        ]);
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        // Clean up verification flag
+        Cache::forget("verified_phone:{$request->phone}");
+
+        return response()->json([
+            'message' => 'User registered successfully',
+            'user'    => $user,
+            'token'   => $token,
+        ], 201);
+    }
+
+    /** ---------- LOGIN WITH EMAIL/PASSWORD ---------- **/
+
+    public function userLogin(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email'    => 'required|email',
+            'password' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json(['message' => 'Invalid credentials'], 401);
+        }
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'message' => 'User registered successfully with KYC verification',
-            'user' => $user,
-            'aadhaar_data' => $aadhaar,
-            'token' => $token,
-        ], 201);
+            'message' => 'Login successful',
+            'token'   => $token,
+            'user'    => $user,
+        ]);
     }
 
-    public function userLogin(Request $request)
+    /** ---------- GOOGLE OAuth ---------- **/
+
+    // 1. Redirect to Google
+    public function redirectToGoogle()
     {
-       
-       $validator = Validator::make($request->all(), [
-        'email' => 'required|email',
-        'password' => 'required|string',
-    ]);
-
-    if ($validator->fails()) {
-        return response()->json($validator->errors(), 422);
+        return Socialite::driver('google')->stateless()->redirect();
     }
 
-    // Find user by email
-    $user = User::where('email', $request->email)->first();
+    // 2. Handle callback
+    public function handleGoogleCallback()
+    {
+        try {
+            $googleUser = Socialite::driver('google')->stateless()->user();
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Google auth failed'], 400);
+        }
 
-    // Check credentials
-    if (!$user || !Hash::check($request->password, $user->password)) {
-        return response()->json(['message' => 'Invalid email or password'], 401);
+        $user = User::where('email', $googleUser->email)->first();
+
+        if (!$user) {
+            // Auto-register
+            $user = User::create([
+                'name'         => $googleUser->name,
+                'email'        => $googleUser->email,
+                'google_id'    => $googleUser->id,
+                'password'     => Hash::make(\Str::random(16)), // dummy
+                'is_verified'  => true,
+                'role'         => 'user',
+            ]);
+        } else {
+            // Update google_id if missing
+            $user->google_id = $googleUser->id;
+            $user->save();
+        }
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        // You can redirect to your frontend with token as query param
+        $redirectUrl = config('app.frontend_url') . '?token=' . $token;
+        return redirect($redirectUrl);
     }
 
-    // Generate API token
-    $token = $user->createToken('auth_token')->plainTextToken;
-
-    // Return response
-    return response()->json([
-        'message' => 'Login successful',
-        'token' => $token,
-        'user' => $user,
-    ], 200);
-    }
+   
 
     public function becomeDriver(Request $request)
     {
@@ -398,9 +355,43 @@ class AuthController extends Controller
 
     public function profile(Request $request)
     {
-        return response()->json([
-            'message' => 'User data fetched successfully',
-            'user' => $request->user(),
-        ], 200);
+      $user = $request->user();               // Authenticated user
+    $data = [
+        'message' => 'User data fetched successfully',
+        'user'    => $user->only([
+            'id', 'name', 'email', 'phone', 'gender',
+            'profile_image', 'emergency_contacts', 'language',
+            'is_active', 'full_address', 'role',
+            'aadhaar_number', 'is_verified', 'is_available',
+            'latitude', 'longitude', 'kyc_status', 'kyc_verified_at',
+        ]),
+    ];
+
+    // -------------------------------------------------
+    // 1. If the user is a DRIVER → attach extra data
+    // -------------------------------------------------
+    if ($user->role === 'driver') {
+        // a) Driver's vehicles
+        $vehicles = VehicleDetails::where('driver_id', $user->id)
+            ->get();
+
+        // b) Driver's documents (KYC)
+        $documents = Riderdocuments::where('user_id', $user->id)
+            ->get();
+
+        $data['driver'] = [
+            'vehicles'   => $vehicles,
+            'documents'  => $documents,
+            // you can add more driver-specific fields here
+        ];
+    }
+
+    // -------------------------------------------------
+    // 2. (Optional) If the user is a PASSENGER → attach passenger data
+    // -------------------------------------------------
+    // elseif ($user->role === 'passenger') { … }
+
+    return response()->json($data, 200);
+
     }
 }
