@@ -1,0 +1,498 @@
+Folder PATH listing for volume Work
+Volume serial number is 94AC-E2DD
+D:.
+|   .editorconfig
+|   .env
+|   .env.example
+|   .gitattributes
+|   .gitignore
+|   .htaccess
+|   artisan
+|   backup.sql
+|   composer.json
+|   composer.lock
+|   laravel_admin_folder_structure.md
+|   package-lock.json
+|   package.json
+|   phpunit.xml
+|   project_structure.txt
+|   README.md
+|   Readonce.txt
+|   RIde Book plan.pdf
+|   Ride Booking Plan in details.pdf
+|   tailwind.config.js
+|   vivek_work_lib.md
+|   zcds.html
+|   
++---app
+|   +---Console
+|   |       Kernel.php
+|   |       
+|   +---Events
+|   |       DriverCounterOffer.php
+|   |       DriverLocationUpdate.php
+|   |       MessageSent.php
+|   |       RideCreated.php
+|   |       RideOfferCreated.php
+|   |       RideRequestCreated.php
+|   |       SOSAlert.php
+|   |       TestEvent.php
+|   |       
+|   +---Http
+|   |   |   Kernel.php
+|   |   |   
+|   |   +---Controllers
+|   |   |   |   AuthController.php
+|   |   |   |   ChatController.php
+|   |   |   |   Controller.php
+|   |   |   |   DriverVerificationController.php
+|   |   |   |   RideController.php
+|   |   |   |   ServiceController.php
+|   |   |   |   
+|   |   |   +---Admin
+|   |   |   |       DashboardController.php
+|   |   |   |       FinancialController.php
+|   |   |   |       PackageController.php
+|   |   |   |       RideController.php
+|   |   |   |       SettingsController.php
+|   |   |   |       SosController.php
+|   |   |   |       UnitController.php
+|   |   |   |       
+|   |   |   +---Api
+|   |   |   |       DocumentController.php
+|   |   |   |       RatingController.php
+|   |   |   |       RideController.php
+|   |   |   |       SosAlertController.php
+|   |   |   |       TransactionController.php
+|   |   |   |       UserController.php
+|   |   |   |       VehicleController.php
+|   |   |   |       
+|   |   |   +---Auth
+|   |   |   |       LoginController.php
+|   |   |   |       
+|   |   |   +---Drivers
+|   |   |   |       DisputeController.php
+|   |   |   |       DriverdocumentController.php
+|   |   |   |       LocationController.php
+|   |   |   |       RideController.php
+|   |   |   |       VehicleDetailsController.php
+|   |   |   |       
+|   |   |   \---Users
+|   |   |           BookRidecontrolle.php
+|   |   |           PlacesController.php
+|   |   |           Ratingcontroller.php
+|   |   |           SosAlertControler.php
+|   |   |           
+|   |   \---Middleware
+|   |           AdminAccess.php
+|   |           Authenticate.php
+|   |           RedirectIfAuthenticated.php
+|   |           
+|   +---Models
+|   |       BookRide.php
+|   |       Disputes.php
+|   |       Driverdocument.php
+|   |       Driverwallet.php
+|   |       Message.php
+|   |       Rating.php
+|   |       Ride.php
+|   |       RideOffer.php
+|   |       RiderDocuments.php
+|   |       Rides.php
+|   |       Service.php
+|   |       SosAlert.php
+|   |       User.php
+|   |       VehicleDetails.php
+|   |       
+|   \---Services
+|           LocationService.php
+|           
++---bootstrap
+|   |   app.php
+|   |   providers.php
+|   |   
+|   \---cache
+|           .gitignore
+|           packages.php
+|           services.php
+|           
++---config
+|       app.php
+|       auth.php
+|       broadcasting.php
+|       cache.php
+|       database.php
+|       filament.php
+|       filesystems.php
+|       logging.php
+|       mail.php
+|       queue.php
+|       sanctum.php
+|       services.php
+|       session.php
+|       
++---database
+|   |   .gitignore
+|   |   
+|   +---factories
+|   |       UserFactory.php
+|   |       
+|   +---migrations
+|   |       0001_01_01_000000_create_users_table.php
+|   |       0001_01_01_000001_create_cache_table.php
+|   |       0001_01_01_000002_create_jobs_table.php
+|   |       2025_08_01_061229_create_reg_users_table.php
+|   |       2025_08_01_061526_create_reg_riders_table.php
+|   |       2025_08_01_061606_create_rider_documents_table.php
+|   |       2025_08_01_061800_create_rides_table.php
+|   |       2025_08_01_063553_create_personal_access_tokens_table.php
+|   |       2025_08_02_051447_create_book_rides_table.php
+|   |       2025_08_02_053627_create_sos_alerts_table.php
+|   |       2025_08_04_070347_create_ratings_table.php
+|   |       2025_08_04_070612_create_disputes_table.php
+|   |       2025_08_04_090357_create_vehicle_details_table.php
+|   |       2025_10_14_160805_add_kyc_fields_to_users_table.php
+|   |       2025_10_15_164101_add_driver_fields_to_users_table.php
+|   |       2025_10_15_164902_update_rider_documents_for_unified_users.php
+|   |       2025_10_15_170319_remove_aadhaar_fields_from_rider_documents_table.php
+|   |       2025_10_21_135827_alter_users_table_role_column.php
+|   |       2025_10_22_111319_create_rides_table.php
+|   |       2025_10_23_141527_create_ride_offers_table.php
+|   |       2025_10_23_163018_create_messages_table.php
+|   |       2025_10_26_124144_update_vehicle_details_foreign_to_users.php
+|   |       2025_11_03_152043_vehicle_details.php
+|   |       2025_11_04_120540_create_services_table.php
+|   |       2025_11_05_163947_create_driverdocuments_table.php
+|   |       
+|   \---seeders
+|           DatabaseSeeder.php
+|           UserSeeder.php
+|           
++---public
+|   |   .htaccess
+|   |   favicon.ico
+|   |   index.php
+|   |   robots.txt
+|   |   
+|   +---build
+|   |   |   manifest.json
+|   |   |   
+|   |   \---assets
+|   |           app-B73F_ANj.css
+|   |           app-DixHBl_0.js
+|   |           
+|   +---css
+|   |   \---filament
+|   |       +---filament
+|   |       |       app.css
+|   |       |       
+|   |       +---forms
+|   |       |       forms.css
+|   |       |       
+|   |       \---support
+|   |               support.css
+|   |               
+|   +---fonts
+|   |   \---filament
+|   |       \---filament
+|   |           \---inter
+|   |                   index.css
+|   |                   inter-cyrillic-ext-wght-normal-ASVAGXXE.woff2
+|   |                   inter-cyrillic-ext-wght-normal-IYF56FF6.woff2
+|   |                   inter-cyrillic-ext-wght-normal-XKHXBTUO.woff2
+|   |                   inter-cyrillic-wght-normal-EWLSKVKN.woff2
+|   |                   inter-cyrillic-wght-normal-JEOLYBOO.woff2
+|   |                   inter-cyrillic-wght-normal-R5CMSONN.woff2
+|   |                   inter-greek-ext-wght-normal-7GGTF7EK.woff2
+|   |                   inter-greek-ext-wght-normal-EOVOK2B5.woff2
+|   |                   inter-greek-ext-wght-normal-ZEVLMORV.woff2
+|   |                   inter-greek-wght-normal-AXVTPQD5.woff2
+|   |                   inter-greek-wght-normal-IRE366VL.woff2
+|   |                   inter-greek-wght-normal-N43DBLU2.woff2
+|   |                   inter-latin-ext-wght-normal-5SRY4DMZ.woff2
+|   |                   inter-latin-ext-wght-normal-GZCIV3NH.woff2
+|   |                   inter-latin-ext-wght-normal-HA22NDSG.woff2
+|   |                   inter-latin-wght-normal-NRMW37G5.woff2
+|   |                   inter-latin-wght-normal-O25CN4JL.woff2
+|   |                   inter-latin-wght-normal-OPIJAQLS.woff2
+|   |                   inter-vietnamese-wght-normal-CE5GGD3W.woff2
+|   |                   inter-vietnamese-wght-normal-TWG5UU7E.woff2
+|   |                   
+|   +---js
+|   |   |   app.js
+|   |   |   
+|   |   \---filament
+|   |       +---actions
+|   |       |       actions.js
+|   |       |       
+|   |       +---filament
+|   |       |       app.js
+|   |       |       echo.js
+|   |       |       
+|   |       +---forms
+|   |       |   \---components
+|   |       |           checkbox-list.js
+|   |       |           code-editor.js
+|   |       |           color-picker.js
+|   |       |           date-time-picker.js
+|   |       |           file-upload.js
+|   |       |           key-value.js
+|   |       |           markdown-editor.js
+|   |       |           rich-editor.js
+|   |       |           select.js
+|   |       |           slider.js
+|   |       |           tags-input.js
+|   |       |           textarea.js
+|   |       |           
+|   |       +---notifications
+|   |       |       notifications.js
+|   |       |       
+|   |       +---schemas
+|   |       |   |   schemas.js
+|   |       |   |   
+|   |       |   \---components
+|   |       |           actions.js
+|   |       |           tabs.js
+|   |       |           wizard.js
+|   |       |           
+|   |       +---support
+|   |       |       support.js
+|   |       |       
+|   |       +---tables
+|   |       |   |   tables.js
+|   |       |   |   
+|   |       |   \---components
+|   |       |       |   table.js
+|   |       |       |   
+|   |       |       \---columns
+|   |       |               checkbox.js
+|   |       |               select.js
+|   |       |               text-input.js
+|   |       |               toggle.js
+|   |       |               
+|   |       \---widgets
+|   |           \---components
+|   |               |   chart.js
+|   |               |   
+|   |               \---stats-overview
+|   |                   \---stat
+|   |                           chart.js
+|   |                           
+|   \---storage
++---resources
+|   +---sos
+|   |       index.blade.php
+|   |       
+|   \---views
+|       |   chat.blade.php
+|       |   welcome.blade.php
+|       |   
+|       +---admin
+|       |   +---auth
+|       |   |       login.blade.php
+|       |   |       
+|       |   +---bookings
+|       |   |       index.blade.php
+|       |   |       
+|       |   +---dashboard
+|       |   |       index.blade.php
+|       |   |       
+|       |   +---documents
+|       |   |       index.blade.php
+|       |   |       
+|       |   +---driver
+|       |   |       index.blade.php
+|       |   |       
+|       |   +---financial
+|       |   |       index.blade.php
+|       |   |       
+|       |   +---packages
+|       |   |       index.blade.php
+|       |   |       
+|       |   +---rides
+|       |   |       index.blade.php
+|       |   |       
+|       |   +---settings
+|       |   |       index.blade.php
+|       |   |       
+|       |   +---sos
+|       |   |       index.blade.php
+|       |   |       
+|       |   +---units
+|       |   |       index.blade.php
+|       |   |       
+|       |   +---users
+|       |   |       index.blade.php
+|       |   |       
+|       |   \---vehicles
+|       |           index.blade.php
+|       |           
+|       +---components
+|       |       table.blade.php
+|       |       
+|       \---layouts
+|           |   admin.blade.php
+|           |   
+|           \---partials
+|                   footer.blade.php
+|                   header.blade.php
+|                   navbar.blade.php
+|                   sidebar.blade.php
+|                   
++---routes
+|       api.php
+|       channels.php
+|       console.php
+|       web.php
+|       
++---storage
+|   +---app
+|   |   |   .gitignore
+|   |   |   
+|   |   +---private
+|   |   |       .gitignore
+|   |   |       
+|   |   \---public
+|   |       |   .gitignore
+|   |       |   
+|   |       +---driver_documents
+|   |       |       1DRMhVk1Upvz5kpvqlNh4ZaFSqDgKZTGZHVTyvSH.png
+|   |       |       1LDbibg88Gt8dp5Ek1HG5pjQGHUIWHdQUtM7aFaa.png
+|   |       |       3dMpTVATCZdKHOTXvK7p4FRDmBr6UDDKVBtAqjQ3.png
+|   |       |       55IKx9X9o13CL1NGG37oyqQ0KKbiVxGaw3EMhe3w.png
+|   |       |       7RUY92QtrNSZfSANrC82rF5FzIMGPB0MrPJWluac.png
+|   |       |       7toado703uiGhX8sPjpE9UPrHpViAHwnXxUeNcau.png
+|   |       |       ajwfzXCH1GloaFTstx5mUbCPrHpsLizmkWMMHBau.jpg
+|   |       |       AzBKmnzuLnKEXfti8MIBQWtkvduYWJ0p5RBU2ohP.png
+|   |       |       AzMILuHzgYYL5AdS8FfoscU22hrjFwmgOiTcePXR.png
+|   |       |       BcyUPQeCYlCWLEjmiMCGEMQBypvR8rwByfqy5p7x.png
+|   |       |       bRUoSXuzLeR6sqn4kUkeqNLD3FnHSCzn9kepKaAN.jpg
+|   |       |       BW5L2WdZb5WJDx5ss21cjjpzUCBefpdigfs6vo8R.png
+|   |       |       EdaGMncTGAhZvzY4UtNYuDPFg19QJkJsNJQBPt3t.png
+|   |       |       GFujOkCMUPQz60oNWLjtW1oYip025rnajV4T8bAq.jpg
+|   |       |       GytaKqziVEwTnjpBAbnMVtk7SNSc3nrJ9v7Df1J1.jpg
+|   |       |       izEqIh6vwUMR1mJdrFnfh0rYJwByW6B7VsHb5RHU.png
+|   |       |       Jm7UAIozurduqxdmaYRImnNRBZXDQrtn6G5w6HFu.png
+|   |       |       LXbXd1jFh73dEIG2LX5hTSgvvAzuGIZLztZhocE3.png
+|   |       |       m68UFgh3HwWz6nZGcoyxef6w4uLzmlJX7gff1dsd.png
+|   |       |       MBtHH1aj3tgp1XRNpD1UUZvMInpoU3ljzPBX3Lz7.png
+|   |       |       MJLbHFYxHkjlhlx0CrbVtrr7G6jq9fXnz8m1pVvs.png
+|   |       |       NQYwhl4MSaOY9nzd1dl7KqCJ7skJ7sspbRZU5Lyg.png
+|   |       |       NuuNKWtlQ6siKytrsG7asYCH2kTFvMz3k14NJOLc.png
+|   |       |       R7wpTpTKmytn4wIryNuOgZXMwYE5yBhycnF2nLGB.jpg
+|   |       |       RHbBr38XSl0esWqeX8UOlzPR57zAQ4xYEnjVzh2a.png
+|   |       |       ThK805kld7vBLatWrreplLRvxVSVltxAlexVKLLG.png
+|   |       |       tQXilVVi7lVU5e3gArxpEhvWwZvJLPFO5NFaxdHX.png
+|   |       |       ulX7vUcj7Xh0LYyExvSkNANuc2O836jc1y5bcizU.jpg
+|   |       |       UW1ZjFzJS8WpelsTBRIqzUqmW8LfYrRjyJF9tUrC.png
+|   |       |       vE25h9x4ao5zdltOHZ4kqJwrP0RVac8t82dI0fzg.png
+|   |       |       VUIslkGJjCGoenQQvdw75ux7IkpDwaAVDlWlN4gg.jpg
+|   |       |       vvHCMMK1s4L5P5oSiy41N1sKeF7VqWXCMANjyCTU.png
+|   |       |       vvZ9tMQD4gd7ZYx57Qs4vn62yspKmABs79jo3eLV.png
+|   |       |       WCTF9caW0dCx7qpvzipTn1xdPLCCtYumLL1iyRZ6.png
+|   |       |       WFKVHyUNNVRQYqJe5oAnbdGLolq0TOBhjXW9MffR.png
+|   |       |       XnKLptdQ2nB3O8pLh3sHXWiDXuf4zgi7c05yUSky.png
+|   |       |       ye75brMDFwv7Wn25wcE7ENLmlafubKvt9iTvtUvU.png
+|   |       |       YLfHHkrcz32CNvXL6BwnmbisdJp9RuUAPmQ1mzY9.png
+|   |       |       Z1Y2uKvj9cMlBZsCjQpqES2U0CNfpuqLN2sTamjT.png
+|   |       |       Z2vp5Jrf4LrfsEYsiFyJHkX8OHyAQgKKIX4yGtsZ.png
+|   |       |       Z7j2P0uDAWLn3tF7CVWQQenM4am8h5Ifp4ilMBms.png
+|   |       |       ZU0vJSPpzZCqbo40lQFUYRLJhSgkySnKjKuj7Pu0.png
+|   |       |       
+|   |       \---profile_images
+|   |               9NnbmOth3FUTPd00FAxtdZ0PJbHdlK1e8JJQ1Yap.jpg
+|   |               jgShTRthso8zAEYBVJ69PDO0n3geVdEmYb2cMtIl.jpg
+|   |               
+|   +---framework
+|   |   |   .gitignore
+|   |   |   
+|   |   +---cache
+|   |   |   |   .gitignore
+|   |   |   |   
+|   |   |   \---data
+|   |   |           .gitignore
+|   |   |           
+|   |   +---sessions
+|   |   |       .gitignore
+|   |   |       
+|   |   +---testing
+|   |   |       .gitignore
+|   |   |       
+|   |   \---views
+|   |           .gitignore
+|   |           0236bf8b68cca5b7b5a68ed4612df10d.php
+|   |           0dd8c42e1228c1dda0f6cb1a1f8d1ff5.php
+|   |           19cae72262108f161876c77cbe609d56.php
+|   |           1c4f7444def5504ccb28a0264c502018.php
+|   |           1d99a7e4df9cb78eeaf464df03e7012b.blade.php
+|   |           29d223506ee160a2d55c43304ff0103b.php
+|   |           2de31207798ddf5f2060b49a15f974b2.php
+|   |           2e17fd1a99ed28d7cfe11634750f3611.php
+|   |           4943bc92ebba41e8b0e508149542e0ad.blade.php
+|   |           49ad503ff0ad4f3d51b8a2dabdf27d94.php
+|   |           50be78a40cdad5101f1b70b60d7ce323.php
+|   |           52fa169d1ae9f9c73a4cac755d3f4771.php
+|   |           53bd463ebbbb240329a2babdc9954351.php
+|   |           55702c2eeeada72ac7c6aaecade073f3.php
+|   |           557f112bcfd40ff4ed71d8a0603209da.blade.php
+|   |           56cd10cb536c914c2d2843869a66cf04.php
+|   |           58658b6932b6d228b8636d9769306d1e.php
+|   |           5cf69ffb99b1dc4727bb0a45e2c8f1c5.php
+|   |           620582c7b3b22ff746362b5238a311a1.php
+|   |           64e241f8571882b02a0809706e7547b4.php
+|   |           6b045dd3420da970401a2c2d1bbc782d.php
+|   |           6e3af1c482d98d4b2e95d67d4232fd09.php
+|   |           70e8a14f91cf92bb507696f1412db186.php
+|   |           7a6b7c23a6ba453529c1065bfb0ea33d.php
+|   |           7a8bcb7797cbe7b88d60731fbc457b4f.php
+|   |           7c46b4d1d16b7e20c19987b446bbb352.php
+|   |           80b938841ac1d605fa3db5a84d0c3c06.php
+|   |           8af2e9c03539541230bd83ef85270fbe.php
+|   |           8eccee6315e488937d2590ef75b754d2.php
+|   |           955322531a1dbacaf921cf89e6fe2dcc.php
+|   |           9b0aa906eb507785d5e713f2ff316d37.blade.php
+|   |           a37ab44266c34e0883ed45b2622b6ca4.php
+|   |           a57a73a542b8fa154bb66ec4aa13d5cd.php
+|   |           a6ad4089fe6ab40433449f2abb71c148.php
+|   |           a7178ba2770a745ffee81238d8476b0c.php
+|   |           a7a6a57f3f5b3dbed0044885076d1027.php
+|   |           ab37b6bd4718fab5d2621a4251bc30dc.php
+|   |           b32f9ce0c47226ac714c7530eec47600.php
+|   |           b3fea7b79a291f72028b3ade68edbac3.blade.php
+|   |           b48b9a0a8f384839aecd970b744ae808.php
+|   |           b4946dd288dbaca7703f6c202095e285.php
+|   |           b759c2640e1bb2498a52ad62166040bf.php
+|   |           bc7d8097958bd042827f619de5e4cbd4.php
+|   |           c2953b8487bc187cad5b2858f1882b30.php
+|   |           c529d992398902e4bf4afbdb29dec81f.php
+|   |           c9b6217f2a24910e511a98cd6679db81.php
+|   |           d8ec02880605f89b5d57f66e6de37178.php
+|   |           de2c645f017737fd5b69d67ab6df5a6a.php
+|   |           df5d8c26b1fd4ecd22aeee145299adc3.blade.php
+|   |           e25cf5b550e4a58eedce8901bdd553a8.php
+|   |           e8057b4de2a81ea38c2793634a7e88c5.php
+|   |           ecce013343a46e79897e7faf1afb49ff.php
+|   |           ed42d3ac44b86b93850260c2e7245a1f.php
+|   |           eff81c88e5e4d49907b9bdfc93087670.php
+|   |           f37b45964dc8ddf266e0bf631dbca2aa.php
+|   |           f37bb9e3c6ab5466f7b144c4e544e5df.php
+|   |           f4a514bf0625f3b18ce34891201d295b.php
+|   |           f7dcbee0cc86c032e7964bc7490f5c72.php
+|   |           f9988977bbe83322c9f85b897a48ef6c.php
+|   |           fa293c676b35fd977c6a3abc6d1a37a3.php
+|   |           fe806708eea2d4513ac1bddd59d9afec.php
+|   |           fe94e56af0b0ac35acf17a89d3aa5e06.php
+|   |           
+|   \---logs
+|           .gitignore
+|           laravel.log
+|           
+\---tests
+    |   TestCase.php
+    |   
+    +---Feature
+    |       ExampleTest.php
+    |       
+    \---Unit
+            ExampleTest.php
+            
