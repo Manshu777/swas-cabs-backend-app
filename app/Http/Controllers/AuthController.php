@@ -14,87 +14,135 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
-use Twilio\Rest\Client as TwilioClient;
+
+use Twilio\Rest\Client ;
 use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
     private $apiKey;
     private $apiSecret;
+    protected Client $twilio;
+   
 
     public function __construct()
     {
-        $this->apiKey = env('AADHAAR_SANDBOX_KEY');
-        $this->apiSecret = env('AADHAAR_SANDBOX_SECRET');
+        $this->twilio = new Client(
+            config('services.twilio.sid'),
+            config('services.twilio.auth_token')
+        );
     }
-
+      
      public function sendTwilioOtp(Request $request)
     {
         $request->validate([
-            'phone' => 'required|string|regex:/^\+?[1-9]\d{9,14}$/',
+            'phone'   => 'required|string|regex:/^\+?[1-9]\d{9,14}$/',
+            'channel' => 'sometimes|in:sms,call',
         ]);
 
-        $phone = $request->phone;
-        $otp   = rand(100000, 999999);               // 6-digit OTP
-        $expires = now()->addMinutes(5);
-
-        Cache::put("otp:{$phone}", ['otp' => $otp, 'expires' => $expires], $expires);
-
-        $twilio = new TwilioClient(config('services.twilio.sid'), config('services.twilio.auth_token'));
+        $phone   = $request->input('phone');
+        $channel = $request->input('channel', 'sms');
 
         try {
-            $twilio->messages->create(
-                $phone,
-                [
-                    'from' => config('services.twilio.from'),
-                    'body' => "Your verification code is {$otp}. It expires in 5 minutes.",
-                ]
-            );
+            $verification = $this->twilio->verify->v2
+                ->services(config('services.twilio.verify_sid'))
+                ->verifications
+                ->create($phone, $channel);
 
             return response()->json([
                 'message' => 'OTP sent successfully',
                 'phone'   => $phone,
+                'channel' => $channel,
+                'sid'     => $verification->sid,
+                'status'  => $verification->status,
             ]);
-        } catch (Exception $e) {
-            Log::error('Twilio OTP error: ' . $e->getMessage());
-            return response()->json(['message' => 'Failed to send OTP'], 500);
+        } catch (RestException $e) {
+            Log::error('Twilio Verify send failed', [
+                'phone'   => $phone,
+                'channel' => $channel,
+                'code'    => $e->getCode(),
+                'error'   => $e->getMessage(),
+            ]);
+
+            $message = $e->getCode() == 20404
+                ? 'Invalid phone number or service not active.'
+                : 'Failed to send OTP';
+
+            return response()->json(['message' => $message], 500);
+        } catch (\Exception $e) {
+            Log::error('Unexpected error in send OTP', ['error' => $e->getMessage()]);
+            return response()->json(['message' => 'An unexpected error occurred.'], 500);
         }
     }
 
+    /**
+     * Verify OTP
+     */
     public function verifyTwilioOtp(Request $request)
     {
         $request->validate([
-            'phone' => 'required|string',
+            'phone' => 'required|string|regex:/^\+?[1-9]\d{9,14}$/',
             'otp'   => 'required|digits:6',
         ]);
 
-        $cacheKey = "otp:{$request->phone}";
-        $data     = Cache::get($cacheKey);
+        $phone = $request->input('phone');
+        $otp   = $request->input('otp');
 
-        if (!$data || now()->gt($data['expires'])) {
-            return response()->json(['message' => 'OTP expired or not found'], 400);
-        }
+        try {
+            $check = $this->twilio->verify->v2
+                ->services(config('services.twilio.verify_sid'))
+                ->verificationChecks
+                ->create([
+                    'to'   => $phone,
+                    'code' => $otp,
+                ]);
 
-        if ($data['otp'] != $request->otp) {
+            if ($check->status === 'approved') {
+                // Mark phone as verified for 2 hours
+                Cache::put("verified_phone:{$phone}", true, now()->addHours(2));
+
+                return response()->json([
+                    'message' => 'Phone verified successfully',
+                    'phone'   => $phone,
+                ]);
+            }
+
             return response()->json(['message' => 'Invalid OTP'], 400);
+        } catch (RestException $e) {
+            Log::error('Twilio Verify check failed', [
+                'phone' => $phone,
+                'otp'   => $otp,
+                'code'  => $e->getCode(),
+                'error' => $e->getMessage(),
+            ]);
+
+            if ($e->getCode() == 20404) {
+                return response()->json([
+                    'message' => 'No active verification found. Please request a new OTP.',
+                ], 400);
+            }
+
+            return response()->json([
+                'message' => 'Verification failed',
+                'error'   => $e->getMessage(),
+            ], 500);
+        } catch (\Exception $e) {
+            Log::error('Unexpected error in OTP verify', ['error' => $e->getMessage()]);
+            return response()->json(['message' => 'An unexpected error occurred.'], 500);
         }
-
-        // OTP valid → mark phone as verified for the next step
-        Cache::forget($cacheKey);
-        Cache::put("verified_phone:{$request->phone}", true, now()->addHours(2));
-
-        return response()->json(['message' => 'Phone verified successfully']);
     }
 
-    /** ---------- REGISTER WITH TWILIO OTP ---------- **/
-
+    /**
+     * Register user after OTP verification
+     */
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'phone'   => 'required|string|regex:/^\+?[1-9]\d{9,14}$/',
-            'email'   => 'required|email|unique:users,email',
-            'password'=> 'required|string|min:8|confirmed',
-            'profile_image' => 'nullable|image',
+            'name'               => 'nullable|string|max:255',
+            'phone'              => 'required|string',
+            'email'              => 'required|email',
+            'password'           => 'required|string|min:8|confirmed',
+            'profile_image'      => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'emergency_contacts' => 'nullable|json',
         ]);
 
@@ -102,22 +150,36 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        // Verify phone via cached flag
-        if (!Cache::has("verified_phone:{$request->phone}")) {
-            return response()->json(['message' => 'Phone number not verified with OTP'], 403);
+        Log::info('Registering user with data: ' . json_encode($request->all()));
+
+
+        $phone = $request->input('phone');
+
+        // Check if phone was verified via OTP
+        // if (!Cache::has("verified_phone:{$phone}")) {
+        //     return response()->json([
+        //         'message' => 'Phone number not verified with OTP. Please complete OTP verification.',
+        //     ], 403);
+        // }
+
+        // Handle profile image
+        $profilePath = null;
+        if ($request->hasFile('profile_image')) {
+            $file = $request->file('profile_image');
+            if ($file->isValid()) {
+                $profilePath = $file->store('profile_images', 'public');
+            }
         }
 
-        $profilePath = $request->hasFile('profile_image')
-            ? $request->file('profile_image')->store('profile_images', 'public')
-            : null;
-
+        // Create user
         $user = User::create([
-            'phone'              => $request->phone,
+            'name'               => $request->name,
+            'phone'              => $phone,
             'email'              => $request->email,
             'password'           => Hash::make($request->password),
             'profile_image'      => $profilePath,
             'emergency_contacts' => $request->emergency_contacts,
-            'kyc_status'         => 'none',   // no Aadhaar now
+            'kyc_status'         => 'none',
             'role'               => 'user',
             'is_verified'        => true,
         ]);
@@ -125,17 +187,18 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         // Clean up verification flag
-        Cache::forget("verified_phone:{$request->phone}");
+        Cache::forget("verified_phone:{$phone}");
 
         return response()->json([
             'message' => 'User registered successfully',
-            'user'    => $user,
+            'user'    => $user->makeHidden(['email_verified_at', 'created_at', 'updated_at']),
             'token'   => $token,
         ], 201);
     }
 
-    /** ---------- LOGIN WITH EMAIL/PASSWORD ---------- **/
-
+    /**
+     * Login with email & password
+     */
     public function userLogin(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -158,7 +221,7 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Login successful',
             'token'   => $token,
-            'user'    => $user,
+            'user'    => $user->makeHidden(['email_verified_at', 'created_at', 'updated_at']),
         ]);
     }
 
@@ -206,85 +269,97 @@ class AuthController extends Controller
 
    
 
-    public function becomeDriver(Request $request)
-    {
-        $user = $request->user();
+     // app/Http/Controllers/AuthController.php
+public function becomeDriver(Request $request)
+{
+    $user = $request->user();
 
-        if ($user->role === 'driver') {
-            return response()->json(['message' => 'User is already a driver'], 400);
-        }
-        Log::info('Becoming Driver Request:', $request->all());
+    // if ($user->role === 'driver') {
+    //     return response()->json(['message' => 'Already a driver'], 400);
+    // }
+    
 
-        $validator = Validator::make($request->all(), [
-            'license_number' => 'required|string',
-            'license_image' => 'nullable',
-            // 'aadhaar_front_image' => 'nullable',
-            // 'aadhaar_back_image' => 'nullable',
-            'vehicle_rc_number' => 'required|string',
-            'vehicle_rc_image' => 'required',
-            'insurance_number' => 'required|string',
-            'insurance_image' => 'required',
-            'police_verification_image' => 'nullable',
-            'brand' => 'required|string',
-            'model' => 'required|string',
-            'vehicle_type' => 'required|string',
-            'license_plate' => 'required|string',
-            'year' => 'required|string',
-            'color' => 'required|string',
-        ]);
-        Log::info('Becoming Driver Request:', $validator->errors()->all());
+    $validator = Validator::make($request->all(), [
+        'license_number'       => 'required|string',
+        'vehicle_rc_number'    => 'required|string',
+        'insurance_number'     => 'required|string',
+        'brand'                => 'required|string',
+        'model'                => 'required|string',
+        'vehicle_type'         => 'required|string',
+        'license_plate'        => 'required|string',
+        'year'                 => 'required|string',
+        'color'                => 'required|string',
+
+        // Files
+    'license_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+    'license_back_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+    'vehicle_rc_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+    'insurance_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+    'police_verification_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+    ]);
 
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
+     Log::warning("Validation failed", [
+        'input'  => $request->all()
+    ]);
 
-        // Update user role to driver
-        $user->role = 'driver';
-        $user->is_verified = false;
-        $user->save();
 
-        // Save driver documents
-        $documentData = [
-            'user_id' => $user->id,
-            'license_number' => $request->license_number,
-            'license_image' => $request->file('license_image')->store('driver_documents', 'public'),
-            // 'aadhaar_number' => $user->aadhaar_number,
-            // 'aadhaar_front_image' => $request->file('aadhaar_front_image')->store('driver_documents', 'public'),
-            // 'aadhaar_back_image' => $request->hasFile('aadhaar_back_image')
-            //     ? $request->file('aadhaar_back_image')->store('driver_documents', 'public')
-            //     : null,
-            'vehicle_rc_number' => $request->vehicle_rc_number,
-            'vehicle_rc_image' => $request->file('vehicle_rc_image')->store('driver_documents', 'public'),
-            'insurance_number' => $request->insurance_number,
-            'insurance_image' => $request->file('insurance_image')->store('driver_documents', 'public'),
-            'police_verification_image' => $request->hasFile('police_verification_image')
-                ? $request->file('police_verification_image')->store('driver_documents', 'public')
-                : null,
-            'status' => 'pending',
-        ];
 
-        $documents = DriverDocument::create($documentData);
+     if ($validator->fails()) {
 
-        // Save vehicle details
-        $vehicleData = [
-            'driver_id' => $user->id,
-            'brand' => $request->brand,
-            'model' => $request->model,
-            'license_plate' => $request->license_plate,
-            'vehicle_type' => $request->vehicle_type,
-            'year' => $request->year,
-            'color' => $request->color,
-        ];
+    Log::warning("Validation failed", [
+        'errors' => $validator->errors(),
+        'input'  => $request->all()
+    ]);
 
-        VehicleDetails::create($vehicleData);
+    return response()->json($validator->errors(), 422);
+}
+    // Handle file uploads
+    $upload = function ($field) use ($request) {
+        return $request->hasFile($field) && $request->file($field)->isValid()
+            ? $request->file($field)->store('driver_documents', 'public')
+            : null;
+    };
 
-        return response()->json([
-            'message' => 'Driver profile created successfully. Awaiting verification.',
-            'user' => $user,
-            'documents' => $documents,
-        ], 201);
-    }
+    $licenseImage = $upload('license_image');
+    $rcImage      = $upload('vehicle_rc_image');
+    $insImage     = $upload('insurance_image');
+    $policeImage  = $upload('police_verification_image');
+
+    // Update user
+    $user->update([
+        'role' => 'driver',
+        'is_verified' => false,
+    ]);
+
+    // Save documents
+    RiderDocuments::create([
+        'user_id' => $user->id,
+        'license_number' => $request->license_number,
+        'license_image'  => $licenseImage,
+        'vehicle_rc_number' => $request->vehicle_rc_number,
+        'vehicle_rc_image'  => $rcImage,
+        'insurance_number' => $request->insurance_number,
+        'insurance_image'  => $insImage,
+        'police_verification_image' => $policeImage,
+        'status' => 'pending',
+    ]);
+
+    // Save vehicle
+    VehicleDetails::create([
+        'driver_id'     => $user->id,
+        'brand'         => $request->brand,
+        'model'         => $request->model,
+        'license_plate' => $request->license_plate,
+        'vehicle_type'  => $request->vehicle_type,
+        'year'          => $request->year,
+        'color'         => $request->color,
+    ]);
+
+    return response()->json([
+        'message' => 'Driver profile created. Awaiting verification.',
+    ], 201);
+}
 
     public function updateDriverStatus(Request $request, $id)
     {

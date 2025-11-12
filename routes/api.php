@@ -10,8 +10,12 @@ use App\Http\Controllers\Drivers\LocationController;
 use App\Http\Controllers\Drivers\VehicleDetailsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Admin\CacheController;
 Route::prefix('v1')->group(function () {
+
+    Route::post('/cache/clear', [CacheController::class, 'clear'])
+             ->name('admin.cache.clear');
+
     // Public routes
    Route::post('otp/send',    [AuthController::class, 'sendTwilioOtp']);
    Route::post('otp/verify', [AuthController::class, 'verifyTwilioOtp']);
