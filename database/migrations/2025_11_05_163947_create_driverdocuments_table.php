@@ -44,7 +44,11 @@ return new class extends Migration
             $table->string('police_verification_image')->nullable();
             $table->enum('police_verification_status', ['pending', 'verified', 'rejected'])->default('pending');
             $table->text('police_verification_rejection_reason')->nullable();
+     
 
+            $table->enum('document', ['pending', 'verified', 'rejected'])->default('pending');
+
+             
             $table->timestamps();
         });
     }
