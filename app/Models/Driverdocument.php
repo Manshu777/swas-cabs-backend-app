@@ -9,7 +9,7 @@ class Driverdocument extends Model
        protected $fillable = [
         'driver_id',
 
-        // License
+        // License 
         'license_number',
         'license_image',
         'license_status',
@@ -38,9 +38,10 @@ class Driverdocument extends Model
         'police_verification_image',
         'police_verification_status',
         'police_verification_rejection_reason',
+
+        "document"
     ];
 
-    // Relationship
     public function driver()
     {
         return $this->belongsTo(User::class, 'driver_id');
