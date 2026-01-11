@@ -1,26 +1,24 @@
 <?php
-
 namespace App\Events;
 
-use App\Models\Message; // ✅ model import
-use Illuminate\Broadcasting\InteractsWithSockets;
+use App\Models\ChatMessage;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Queue\SerializesModels;
 
 class MessageSent implements ShouldBroadcast
 {
-    use InteractsWithSockets, SerializesModels;
+    use SerializesModels;
 
-    public $message; // ✅ public property for model
-
-    public function __construct(Message $message) // ✅ model type hint
-    {
-        $this->message = $message;
+    public function __construct(public ChatMessage $chatMessage) {
+        $this->chatMessage->load('sender:id,name,profile_image');
     }
 
-    public function broadcastOn()
-    {
-        return new PrivateChannel('chat');
+    public function broadcastOn() {
+        return new PrivateChannel('chat.' . $this->chatMessage->ride_id);
+    }
+
+    public function broadcastAs() {
+        return 'message.new';
     }
 }

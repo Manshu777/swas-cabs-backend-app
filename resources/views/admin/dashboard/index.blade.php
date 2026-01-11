@@ -3,149 +3,174 @@
 @section('title', 'Dashboard')
 
 @section('content')
-<div class="mb-6">
-    <h1 class="text-3xl font-bold ">Dashboard</h1>
-    <p class="text-gray-600 mt-1">Welcome back! Here's what's happening with your application.</p>
+{{-- Page Header --}}
+<div class="mb-10">
+    <h1 class="text-4xl font-extrabold tracking-tight text-black">Dashboard</h1>
+    <p class="text-gray-400 mt-2 font-medium">Welcome back, {{ auth()->user()->name }}. Here is your fleet at a glance.</p>
 </div>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+{{-- Stats Grid --}}
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
     {{-- Total Revenue --}}
-    <div class="cards-data p-6 rounded-lg shadow-md">
-        <div class="flex items-center justify-between">
+    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow group">
+        <div class="flex items-start justify-between">
             <div>
-                <p class="text-sm font-medium text-gray-600">Total Revenue</p>
-                <p class="text-2xl font-bold ">$45,231</p>
-                <p class="text-sm text-green-600">+20.1% from last month</p>
+                <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Total Revenue</p>
+                <p class="text-3xl font-black text-black">$45,231</p>
+                <div class="mt-2 flex items-center text-xs font-bold text-black bg-gray-50 px-2 py-1 rounded-full w-fit">
+                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+                    20.1%
+                </div>
             </div>
-            <div class="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center">
-                <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            <div class="p-3 bg-black rounded-xl group-hover:scale-110 transition-transform">
+                <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
             </div>
         </div>
     </div>
 
     {{-- New Bookings --}}
-    <div class="cards-data p-6 rounded-lg shadow-md">
-        <div class="flex items-center justify-between">
+    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+        <div class="flex items-start justify-between">
             <div>
-                <p class="text-sm font-medium text-gray-600">New Bookings</p>
-                <p class="text-2xl font-bold ">156</p>
-                <p class="text-sm text-green-600">+15.3% from last month</p>
+                <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">New Bookings</p>
+                <p class="text-3xl font-black text-black">156</p>
+                <p class="text-xs font-bold text-gray-500 mt-2">+15.3% <span class="font-medium text-gray-400">vs last month</span></p>
             </div>
-            <div class="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center">
-                <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="p-3 bg-gray-50 rounded-xl">
+                <svg class="h-5 w-5 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
-                    <line x1="16" x2="16" y1="2" y2="6"></line>
-                    <line x1="8" x2="8" y1="2" y2="6"></line>
-                    <line x1="3" x2="21" y1="10" y2="10"></line>
+                    <path d="M16 2v4M8 2v4M3 10h18"></path>
                 </svg>
             </div>
         </div>
     </div>
 
     {{-- Rented Cars --}}
-    <div class="cards-data p-6 rounded-lg shadow-md">
-        <div class="flex items-center justify-between">
+    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+        <div class="flex items-start justify-between">
             <div>
-                <p class="text-sm font-medium text-gray-600">Rented Cars</p>
-                <p class="text-2xl font-bold ">89</p>
-                <p class="text-sm text-green-600">+12.5% from last month</p>
+                <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Rented Cars</p>
+                <p class="text-3xl font-black text-black">89</p>
+                <p class="text-xs font-bold text-gray-500 mt-2">+12.5% <span class="font-medium text-gray-400">vs last month</span></p>
             </div>
-            <div class="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center">
-                <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <rect width="18" height="11" x="3" y="6" rx="2"></rect>
-                    <path d="M21 10h-3V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3H3a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1z"></path>
-                    <circle cx="7" cy="14" r="1"></circle>
-                    <circle cx="17" cy="14" r="1"></circle>
+            <div class="p-3 bg-gray-50 rounded-xl">
+                <svg class="h-5 w-5 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M7 17a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17 17a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"></path>
+                    <path d="M5 17H3V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10h-2m-3 0h-4"></path>
                 </svg>
             </div>
         </div>
     </div>
 
     {{-- Available Cars --}}
-    <div class="cards-data p-6 rounded-lg shadow-md">
-        <div class="flex items-center justify-between">
+    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+        <div class="flex items-start justify-between">
             <div>
-                <p class="text-sm font-medium text-gray-600">Available Cars</p>
-                <p class="text-2xl font-bold ">67</p>
-                <p class="text-sm text-red-600">-8.2% from last month</p>
+                <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Available Cars</p>
+                <p class="text-3xl font-black text-black">67</p>
+                <div class="mt-2 flex items-center text-xs font-bold text-red-500 bg-red-50 px-2 py-1 rounded-full w-fit">
+                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                    8.2%
+                </div>
             </div>
-            <div class="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center">
-                <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+            <div class="p-3 bg-gray-50 rounded-xl">
+                <svg class="h-5 w-5 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                 </svg>
             </div>
         </div>
     </div>
 </div>
 
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <!-- Recent Activity Table -->
-    <div class=" rounded-lg shadow-md overflow-hidden">
-        <div class="p-6 border-b border-gray-200">
-            <h2 class="text-lg font-semibold ">Recent Activity</h2>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    {{-- Recent Activity Table --}}
+    <div class="lg:col-span-2 bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+        <div class="px-8 py-6 border-b border-gray-50 flex justify-between items-center">
+            <h2 class="text-lg font-bold text-black">Recent Activity</h2>
+            <button class="text-xs font-bold text-gray-400 hover:text-black transition-colors uppercase tracking-widest">View All</button>
         </div>
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+        <div class="overflow-x-auto px-4 pb-4">
+            <table class="min-w-full">
+                <thead>
+                    <tr class="text-left border-b border-gray-50">
+                        <th class="px-4 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-widest">User</th>
+                        <th class="px-4 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-widest">Action</th>
+                        <th class="px-4 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-widest text-right">Time</th>
                     </tr>
                 </thead>
-                <tbody class=" divide-y divide-gray-200">
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium ">John Doe</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Created new order #123</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2 hours ago</td>
+                <tbody class="divide-y divide-gray-50">
+                    <tr class="hover:bg-gray-50/50 transition-colors">
+                        <td class="px-4 py-4 whitespace-nowrap">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold">JD</div>
+                                <span class="text-sm font-bold text-black">John Doe</span>
+                            </div>
+                        </td>
+                        <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">Created new order <span class="text-black font-semibold">#123</span></td>
+                        <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-400 text-right">2 hours ago</td>
                     </tr>
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium ">Jane Smith</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Updated profile</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1 day ago</td>
-                    </tr>
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium ">Bob Johnson</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Logged in</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">3 days ago</td>
+                    <tr class="hover:bg-gray-50/50 transition-colors">
+                        <td class="px-4 py-4 whitespace-nowrap">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold">JS</div>
+                                <span class="text-sm font-bold text-black">Jane Smith</span>
+                            </div>
+                        </td>
+                        <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">Updated <span class="text-black font-semibold">Profile</span></td>
+                        <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-400 text-right">1 day ago</td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <!-- Quick Actions -->
-    <div class=" rounded-lg shadow-md p-6">
-        <h2 class="text-lg font-semibold  mb-4">Quick Actions</h2>
-        <div class="space-y-3">
-            <a href="#" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                <svg class="w-5 h-5 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                </svg>
-                <span class="text-gray-700">Add New User</span>
-            </a>
-            <a href="#" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                <svg class="w-5 h-5 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <span class="text-gray-700">Create Order</span>
-            </a>
-            <a href="#" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                <svg class="w-5 h-5 text-purple-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                </svg>
-                <span class="text-gray-700">View Reports</span>
-            </a>
+    {{-- Quick Actions --}}
+    <div class="space-y-6">
+        <div class="bg-black rounded-3xl p-8 shadow-xl shadow-gray-200">
+            <h2 class="text-lg font-bold text-white mb-6">Quick Actions</h2>
+            <div class="space-y-4">
+                <a href="#" class="flex items-center justify-between p-4 bg-white/10 rounded-2xl border border-white/10 hover:bg-white/20 transition-all group">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center mr-4 group-hover:rotate-6 transition-transform">
+                            <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                        </div>
+                        <span class="text-sm font-bold text-white">Add User</span>
+                    </div>
+                    <svg class="w-4 h-4 text-white/40 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                </a>
+
+                <a href="#" class="flex items-center justify-between p-4 bg-white/10 rounded-2xl border border-white/10 hover:bg-white/20 transition-all group">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center mr-4">
+                            <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                        </div>
+                        <span class="text-sm font-bold text-white">New Order</span>
+                    </div>
+                    <svg class="w-4 h-4 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+        </div>
+
+        {{-- Mini Chart Placeholder / System Health --}}
+        <div class="bg-gray-50 rounded-3xl p-6 border border-gray-100">
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">System Health</span>
+                <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            </div>
+            <div class="flex items-end space-x-1 h-12">
+                <div class="flex-1 bg-gray-200 rounded-t-sm h-[60%]"></div>
+                <div class="flex-1 bg-gray-200 rounded-t-sm h-[80%]"></div>
+                <div class="flex-1 bg-black rounded-t-sm h-[100%]"></div>
+                <div class="flex-1 bg-gray-200 rounded-t-sm h-[70%]"></div>
+                <div class="flex-1 bg-gray-200 rounded-t-sm h-[90%]"></div>
+            </div>
         </div>
     </div>
 </div>
 
-
-
 @push('scripts')
-
+{{-- Chart.js logic could go here --}}
 @endpush
 @endsection

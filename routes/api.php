@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RideController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SosAlertController;
+
 use App\Http\Controllers\Users\BookRideControlle;
 use App\Http\Controllers\Users\BookRideController;
 use App\Http\Controllers\Users\PaymentController;
@@ -11,6 +12,9 @@ use App\Http\Controllers\Users\PlacesController;
 use App\Http\Controllers\Drivers\LocationController;
 use App\Http\Controllers\Drivers\VehicleDetailsController;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Api\RideBiddingController;
+
+///RideBiddingController
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CacheController;
 Route::prefix('v1')->group(function () {
@@ -40,12 +44,22 @@ Route::prefix('v1')->group(function () {
         Route::prefix('user')->group(function () {
             Route::post('/rides/create', [BookRideControlle::class, 'createRide']);
         });
+        Route::get('/chat/{rideId}/history', [ChatController::class, 'getHistory']);
+    Route::post('/chat/{rideId}/send', [ChatController::class, 'sendMessage']);
 
-        Route::prefix('driver')->group(function () {
-            Route::post('/{id}/location', [LocationController::class, 'update']);
-            Route::get('/rides', [RideController::class, 'driverRides']);
-            Route::get('/ratings', [RideController::class, 'driverRatings']);
-        });
+       Route::prefix('ride')->group(function () {
+        Route::post('/request', [RideBiddingController::class, 'storeRide']); // Step 1: Request
+        Route::post('/accept-bid/{bidId}', [RideBiddingController::class, 'acceptBid']); // Step 3: Accept
+
+        
+    });
+
+
+
+    // Driver Actions
+    Route::prefix('driver')->group(function () {
+        Route::post('/ride/{rideId}/bid', [RideBiddingController::class, 'submitBid']); // Step 2: Offer
+    });
 
         Route::prefix('admin')->group(function () {
             Route::get('/users', [AuthController::class, 'getAllUsers']);
@@ -60,16 +74,16 @@ Route::prefix('v1')->group(function () {
             Route::post('/verify', [PaymentController::class, 'verifyPayment']);
         });
 
-        Route::prefix('rides')->group(function () {
-            Route::get('/', [RideController::class, 'index']);
-            Route::post('/', [RideController::class, 'store']);
-            Route::get('/{id}', [RideController::class, 'show']);
-            Route::put('/{id}', [RideController::class, 'update']);
-            Route::delete('/{id}', [RideController::class, 'destroy']);
-            Route::post('/{id}/cancel', [RideController::class, 'cancel']);
-            Route::post('/{id}/accept', [RideController::class, 'accept']);
-            Route::post('/{id}/status', [RideController::class, 'updateStatus']);
-        });
+        // Route::prefix('rides')->group(function () {
+        //     Route::get('/', [RideController::class, 'index']);
+        //     Route::post('/', [RideController::class, 'store']);
+        //     Route::get('/{id}', [RideController::class, 'show']);
+        //     Route::put('/{id}', [RideController::class, 'update']);
+        //     Route::delete('/{id}', [RideController::class, 'destroy']);
+        //     Route::post('/{id}/cancel', [RideController::class, 'cancel']);
+        //     Route::post('/{id}/accept', [RideController::class, 'accept']);
+        //     Route::post('/{id}/status', [RideController::class, 'updateStatus']);
+        // });
 
         Route::post('/sos', [SosAlertController::class, 'store']);
         Route::apiResource('vehicle-details', VehicleDetailsController::class);

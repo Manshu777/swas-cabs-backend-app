@@ -1,108 +1,105 @@
 @php
-$navigation = [
-    ['name' => 'Dashboard', 'icon' => 'layout-dashboard', 'active' => request()->routeIs('admin.dashboard'), 'href' => route('admin.dashboard')],
-    ['name' => 'Bookings', 'icon' => 'calendar', 'active' => request()->routeIs('admin.bookings.*'), 'href' => route('admin.bookings')],
-    ['name' => 'Units (Cars)', 'icon' => 'car', 'active' => request()->routeIs('admin.units.*'), 'href' => route('admin.units')],
-    ['name' => 'Users', 'icon' => 'users', 'active' => request()->routeIs('admin.users.*'), 'href' => route('admin.users')],
-    ['name' => 'Drivers', 'icon' => 'user-check', 'active' => request()->routeIs('admin.drivers.*'), 'href' => route('admin.drivers')],
-        ['name' => 'Drivers Documents', 'icon' => 'document', 'active' => request()->routeIs('admin.documents.*'), 'href' => route('admin.documents')],
-        ['name' => 'Drivers vehicle', 'icon' => 'vehicle', 'active' => request()->routeIs('admin.vehicles.*'), 'href' => route('admin.vehicles')],
-
-    ['name' => 'Rides', 'icon' => 'map-pin', 'active' => request()->routeIs('admin.rides.*'), 'href' => route('admin.rides')],
-    ['name' => 'Financial', 'icon' => 'rupee', 'active' => request()->routeIs('admin.financial.*'), 'href' => route('admin.financial')],
-    ['name' => 'Tour Packages', 'icon' => 'package', 'active' => request()->routeIs('admin.packages.*'), 'href' => route('admin.packages')],
-    ['name' => 'SOS Monitoring', 'icon' => 'alert-triangle', 'active' => request()->routeIs('admin.sos.*'), 'href' => route('admin.sos')],
-    ['name' => 'Settings', 'icon' => 'settings', 'active' => request()->routeIs('admin.settings.*'), 'href' => route('admin.settings')],
-];
-
-$icons = [
-    'layout-dashboard' => '<path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>',
-    'calendar' => '<rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/>',
-    'car' => '<rect width="18" height="11" x="3" y="6" rx="2"/><path d="M21 10h-3V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3H3a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1z"/><circle cx="7" cy="14" r="1"/><circle cx="17" cy="14" r="1"/>',
-    'users' => '<path d="M16 21v-2a4 4 0 0 0-8 0v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
-    'user-check' => '<path d="M16 21v-2a4 4 0 0 0-8 0v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/>',
-    'map-pin' => '<path d="M20 10c0-6-8-12-8-12s-8 6-8 12a8 8 0 0 0 16 0z"/><line x1="9" x2="9.01" y1="10" y2="13"/><line x1="15" x2="15.01" y1="10" y2="13"/>',
-    'rupee' => '<path d="M6.5 2h11a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M5 12a2 2 0 0 1 2-2 2 2 0 0 1 2 2v7a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-7z"/><path d="M12 2v20M16 16h4"/>',
-    'package' => '<path d="M22 7H2a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><line x1="9" x2="15" y1="9" y2="15"/><line x1="15" x2="9" y1="9" y2="15"/>',
-    'alert-triangle' => '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/>',
-    'settings' => '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l-.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
-'document' => '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>',
- 'vehicle' => '<path d="M3 13l2-5h14l2 5M5 13v6a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1h8v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-6M3 13h18"/><circle cx="7.5" cy="18.5" r="1.5"/><circle cx="16.5" cy="18.5" r="1.5"/>',
-
-];
-
-$collapsed = session('sidebar_collapsed', false) || (request()->cookie('sidebar_collapsed') === 'true');
-$isMobile = request()->header('User-Agent') && preg_match('/Mobile|Android|iPhone/', request()->header('User-Agent'));
+    // Logic for your existing arrays remains the same
+    $collapsed = session('sidebar_collapsed', false);
+    // Added a helper for the mobile class logic
+    $sidebarWidth = $collapsed ? 'w-20' : 'w-72';
 @endphp
 
-{{-- Mobile Backdrop --}}
-@if($isMobile)
-<div class="fixed side-bar-col inset-0 z-40  bg-opacity-50 lg:hidden hidden" id="mobile-backdrop" onclick="closeSidebar()"></div>
-@endif
+{{-- Mobile Overlay: Subtle blur for a premium feel --}}
+<div 
+    id="mobile-backdrop" 
+    class="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm lg:hidden hidden transition-opacity" 
+    onclick="closeSidebar()"
+    aria-hidden="true">
+</div>
 
 <aside
     id="sidebar"
-    class="fixed inset-y-0 left-0 z-50 flex flex-col  border-r  transition-transform duration-300 ease-in-out
-           {{ $collapsed ? 'w-16' : 'w-72' }} transform -translate-x-full lg:translate-x-0"
+    class="fixed inset-y-0 left-0 z-50 flex flex-col bg-white border-r border-gray-100 transition-all duration-300 ease-in-out shadow-sm
+           {{ $sidebarWidth }} transform -translate-x-full lg:translate-x-0"
+    aria-label="Main Navigation"
 >
-    {{-- Header --}}
-    <div class="flex h-16 items-center justify-between px-4 border-b ">
-        <div class="flex items-center space-x-2 {{ $collapsed ? 'hidden' : '' }}">
-            <svg class="h-8 w-8 " fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-            </svg>
-            <h1 id="textappear" class="text-xl font-bold ">TaxiAdmin</h1>
+    {{-- Header: Clean Branding --}}
+    <div class="flex h-20 items-center justify-between px-6">
+        <div class="flex items-center space-x-3 {{ $collapsed ? 'hidden' : 'flex' }}">
+            <div class="bg-black p-1.5 rounded-lg">
+                <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                </svg>
+            </div>
+            <h1 class="text-lg font-bold tracking-tight text-black">TaxiAdmin</h1>
         </div>
 
-        <div class="flex items-center space-x-2">
-            <button onclick="toggleCollapsed()" class="hidden lg:block p-1.5 rounded-md ">
-                <svg class="h-4 w-4 transition-transform {{ $collapsed ? 'rotate-180' : '' }}" fill="none"
-                     stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                </svg>
-            </button>
-            <button onclick="closeSidebar()" class="lg:hidden p-1.5 rounded-md ">
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-            </button>
-        </div>
+        {{-- Desktop Toggle --}}
+        <button 
+            onclick="toggleCollapsed()" 
+            class="hidden lg:flex items-center justify-center p-2 rounded-full hover:bg-gray-50 text-gray-400 hover:text-black transition-colors"
+            aria-label="Toggle Sidebar"
+        >
+            <svg class="h-5 w-5 transition-transform {{ $collapsed ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
+            </svg>
+        </button>
+
+        {{-- Mobile Close --}}
+        <button onclick="closeSidebar()" class="lg:hidden p-2 text-gray-400">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
     </div>
 
-    {{-- Navigation --}}
-    <nav class="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
+    {{-- Navigation: Minimalist List --}}
+    <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto scrollbar-hide">
         @foreach ($navigation as $item)
             <a href="{{ $item['href'] }}"
-               class="group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors
-                      {{ $item['active'] ? ' border-r-2 ' : '' }}"
+               class="group relative flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200
+                      {{ $item['active'] 
+                         ? 'bg-black text-white shadow-md shadow-gray-200' 
+                         : 'text-gray-500 hover:bg-gray-50 hover:text-black' }}"
                title="{{ $collapsed ? $item['name'] : '' }}">
-                <svg class="flex-shrink-0 {{ $collapsed ? 'mx-auto h-6 w-6' : 'mr-3 h-5 w-5' }}" fill="none"
-                     stroke="currentColor" viewBox="0 0 24 24">
+                
+                <svg class="flex-shrink-0 transition-colors {{ $collapsed ? 'mx-auto h-6 w-6' : 'mr-3 h-5 w-5' }}" 
+                     fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     {!! $icons[$item['icon']] !!}
                 </svg>
-                <span  class="navigation-bar-text">{{ $item['name'] }}</span>
+                
+                <span class="truncate transition-opacity duration-200 {{ $collapsed ? 'hidden' : 'opacity-100' }}">
+                    {{ $item['name'] }}
+                </span>
+
+                {{-- Active Indicator for Collapsed State --}}
+                @if($item['active'] && $collapsed)
+                    <div class="absolute left-0 w-1 h-6 bg-black rounded-r-full"></div>
+                @endif
             </a>
         @endforeach
     </nav>
 
-    {{-- Footer --}}
-    <div class="p-4 border-t ">
-        <div class="flex items-center {{ $collapsed ? 'justify-center' : 'space-x-3' }}">
-            <div class="h-8 w-8 rounded-full  flex items-center justify-center">
-                <span class="text-sm font-medium ">{{ auth()->user()->name[0] }}</span>
+    {{-- Footer: Profile Section --}}
+    <div class="p-4 bg-gray-50/50 border-t border-gray-100">
+        <div class="flex items-center p-2 rounded-xl {{ $collapsed ? 'justify-center' : 'space-x-3' }}">
+            {{-- Avatar --}}
+            <div class="h-9 w-9 rounded-full bg-black flex items-center justify-center ring-2 ring-white shadow-sm">
+                <span class="text-xs font-bold text-white">{{ strtoupper(auth()->user()->name[0]) }}</span>
             </div>
 
             <div class="{{ $collapsed ? 'hidden' : 'flex-1 min-w-0' }}">
-                <p class="text-sm font-medium  truncate">{{ auth()->user()->name }}</p>
-                <p class="text-xs truncate">{{ auth()->user()->email }}</p>
+                <p class="text-sm font-semibold text-black truncate">{{ auth()->user()->name }}</p>
+                <p class="text-[11px] text-gray-400 uppercase tracking-wider truncate font-medium">Administrator</p>
             </div>
         </div>
 
-        <form action="{{ route('logout') }}" method="POST" class="mt-2 text-center {{ $collapsed ? 'hidden' : '' }}">
-            @csrf
-            <button type="submit" class="text-sm text-red-600 hover:underline">Logout</button>
-        </form>
+        <div class="mt-4 px-2 {{ $collapsed ? 'hidden' : '' }}">
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="flex items-center w-full px-2 py-2 text-xs font-bold text-gray-400 hover:text-red-500 transition-colors group">
+                    <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    LOGOUT
+                </button>
+            </form>
+        </div>
     </div>
 </aside>

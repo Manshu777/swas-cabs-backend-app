@@ -1,18 +1,13 @@
 <?php
 use Illuminate\Support\Facades\Broadcast;
 
-Broadcast::channel('private-user.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
+
+Broadcast::channel('ride.{rideId}', function ($user, $rideId) {
+    $ride = \App\Models\Ride::find($rideId);
+    return (int) $user->id === (int) $ride->user_id || $user->role === 'driver';
 });
 
-Broadcast::channel('private-driver.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id && $user->role === 'driver';
-});
-
-Broadcast::channel('admin.sos', function ($user) {
-    return $user->role === 'admin';
-});
-
-Broadcast::channel('public-nearby.{geohash}', function ($user) {
-    return $user->role === 'driver' && $user->is_available;
+Broadcast::channel('chat.{rideId}', function ($user, $rideId) {
+    $ride = \App\Models\Ride::find($rideId);
+    return $ride && ($user->id === $ride->user_id || $user->id === $ride->driver_id);
 });

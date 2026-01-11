@@ -1,0 +1,26 @@
+curl -X POST http://localhost:8000/api/ride/request \
+     -H "Authorization: Bearer YOUR_PASSENGER_TOKEN" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "pickup_location": "Central Park",
+           "drop_location": "Airport",
+           "initial_fare": 500
+         }'
+
+curl -X POST http://localhost:8000/api/ride/1/bid \
+     -H "Authorization: Bearer YOUR_DRIVER_TOKEN" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "offered_fare": 550
+         }'
+curl -X POST http://localhost:8000/api/ride/accept-bid/1 \
+     -H "Authorization: Bearer YOUR_PASSENGER_TOKEN" \
+     -H "Content-Type: application/json"
+
+curl -X POST http://localhost:8000/api/chat/1/send \
+     -H "Authorization: Bearer DRIVER_TOKEN" \
+     -H "Content-Type: application/json" \
+     -d '{"message": "I am waiting at the main gate"}'
+
+curl -X GET http://localhost:8000/api/chat/1/history \
+     -H "Authorization: Bearer PASSENGER_TOKEN"
